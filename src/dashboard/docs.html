@@ -620,7 +620,75 @@
   .hgp-coda b { color: var(--amber); }
   @media (max-width: 700px) {
     .hgp-annot, .hgp-util { grid-template-columns: 1fr 1fr; }
+    .api-compare { grid-template-columns: 1fr; }
+    .api-tabs-row { flex-direction: column; }
   }
+
+  /* ── API Reference ─────────────── */
+  .api-code {
+    background: #0d1224; border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; font-family: var(--mono); font-size: 11.5px;
+    line-height: 1.75; color: var(--text); overflow-x: auto; white-space: pre;
+    margin: 10px 0;
+  }
+  .api-code .kw { color: var(--purple); }
+  .api-code .fn { color: var(--blue); }
+  .api-code .st { color: var(--green); }
+  .api-code .cm { color: #475569; }
+  .api-code .tp { color: var(--teal); }
+  .api-code .hl { color: var(--amber); }
+  .api-callout {
+    padding: 12px 16px; border-radius: 8px; margin: 12px 0;
+    background: rgba(240,160,48,0.04); border: 1px solid rgba(240,160,48,0.1);
+    font-size: 12px; color: var(--text-dim); line-height: 1.7;
+  }
+  .api-callout b { color: var(--amber); }
+  .api-compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;
+  }
+  .api-cmp-card {
+    background: #0d1224; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--mono); font-size: 10.5px;
+    line-height: 1.7; color: var(--text-dim); white-space: pre; overflow-x: auto;
+  }
+  .api-cmp-card.bad { border-color: rgba(248,113,113,0.15); }
+  .api-cmp-card.good { border-color: rgba(74,222,128,0.15); }
+  .api-cmp-label {
+    font-family: var(--sans); font-size: 11px; font-weight: 700;
+    margin-bottom: 8px; display: block;
+  }
+  .api-cmp-card.bad .api-cmp-label { color: var(--red); }
+  .api-cmp-card.good .api-cmp-label { color: var(--green); }
+  .api-tabs-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .api-tab-btn {
+    font-family: var(--mono); font-size: 11px; padding: 6px 14px;
+    border: 1px solid var(--border); border-radius: 6px;
+    background: rgba(255,255,255,0.02); color: var(--text-dim);
+    cursor: pointer; transition: all .2s;
+  }
+  .api-tab-btn:hover { border-color: var(--amber); color: var(--text); }
+  .api-tab-btn.active { border-color: var(--amber); color: var(--amber); background: rgba(240,160,48,0.06); }
+  .api-tab-btn.active-green { border-color: var(--green); color: var(--green); background: rgba(74,222,128,0.06); }
+  .api-tab-btn.active-purple { border-color: var(--purple); color: var(--purple); background: rgba(167,139,250,0.06); }
+  .api-tab-content { display: none; }
+  .api-tab-content.active { display: block; }
+  .api-cmd-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 10px 0; }
+  .api-cmd-table th {
+    text-align: left; padding: 8px 10px; font-weight: 600; font-size: 9px;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .api-cmd-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-family: var(--mono); }
+  .api-cmd-table td:first-child { color: var(--amber); font-weight: 500; }
+  .api-cmd-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .api-conf-code {
+    background: #0d1224; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--mono); font-size: 11px;
+    line-height: 1.8; color: var(--text); overflow-x: auto; white-space: pre;
+  }
+  .api-conf-code .cm { color: #475569; }
+  .api-conf-code .st { color: var(--green); }
+  .api-conf-code .num { color: var(--amber); }
 </style>
 </head>
 <body>
@@ -629,6 +697,7 @@
   <a href="/docs" class="brand">HELIX &times; TEMPO</a>
   <div class="links">
     <a href="#overview">Overview</a>
+    <a href="#api-ref">API</a>
     <a href="#how-it-works">How it Works</a>
     <a href="#scenarios">Scenarios</a>
     <a href="#use-cases">Use Cases</a>
@@ -656,6 +725,294 @@
       <a href="#quickstart" class="btn-primary">Developer Quickstart</a>
       <a href="https://github.com/adrianhihi/helix-tempo" target="_blank" class="btn-outline">View on GitHub</a>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════ API REFERENCE ═══════════ -->
+<section id="api-ref">
+  <div class="fade-in">
+    <h2>Developer API Reference</h2>
+    <p class="section-sub">Add self-healing to any payment agent in 30 seconds.</p>
+
+    <!-- Quick Start -->
+    <div class="api-code"><span class="cm">// Step 1: Install</span>
+<span class="hl">npm install @helix/tempo</span>
+
+<span class="cm">// Step 2: Wrap your agent</span>
+<span class="kw">import</span> { <span class="fn">wrap</span> } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="cm">// Your existing payment code — unchanged</span>
+<span class="kw">const</span> payInvoice = <span class="kw">async</span> (invoice) =&gt; {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="st">'https://mpp.service.com/v1/pay'</span>, {
+    method: <span class="st">'POST'</span>,
+    headers: { <span class="st">'Authorization'</span>: <span class="st">`Bearer ${MPP_TOKEN}`</span> },
+    body: JSON.<span class="fn">stringify</span>({ amount: invoice.amount, currency: <span class="st">'USDC'</span> }),
+  });
+  <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error(<span class="st">`Payment failed: ${res.status}`</span>);
+  <span class="kw">return</span> res.<span class="fn">json</span>();
+};
+
+<span class="cm">// One line. Same input, same output. Self-healing is transparent.</span>
+<span class="kw">const</span> resilientPay = <span class="fn">wrap</span>(payInvoice);
+
+<span class="cm">// Call it exactly like before</span>
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">resilientPay</span>(invoice);
+<span class="cm">// If it fails → PCEC auto-repairs → retries → you get the result</span></div>
+
+    <!-- Before / After -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-bright);margin:20px 0 10px">Before &amp; After</h3>
+    <div class="api-compare">
+      <div class="api-cmp-card bad"><span class="api-cmp-label">&#10060; Without Helix</span>
+<span class="kw">const</span> pay = <span class="kw">async</span> (inv) =&gt; {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(url);
+  <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error();
+  <span class="kw">return</span> res.<span class="fn">json</span>();
+};
+
+<span style="color:var(--red)">// 402? Agent crashes.
+// Session expired? Dead.
+// Wrong currency? Manual fix.
+// Same error tomorrow? Same crash.</span></div>
+      <div class="api-cmp-card good"><span class="api-cmp-label">&#9889; With Helix</span>
+<span class="kw">import</span> { <span class="fn">wrap</span> } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="kw">const</span> pay = <span class="fn">wrap</span>(<span class="kw">async</span> (inv) =&gt; {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(url);
+  <span class="kw">if</span> (!res.ok) <span class="kw">throw new</span> Error();
+  <span class="kw">return</span> res.<span class="fn">json</span>();
+});
+
+<span style="color:var(--green)">// 402? Auto-swaps currency.
+// Expired? Auto-renews session.
+// Same error? Instant immune fix.</span></div>
+    </div>
+
+    <!-- Three Integration Levels -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-bright);margin:28px 0 10px">Three Integration Levels</h3>
+    <div class="api-tabs-row">
+      <button class="api-tab-btn active-green" onclick="showApiTab(0)">wrap() &mdash; Zero Config</button>
+      <button class="api-tab-btn" onclick="showApiTab(1)">createEngine() &mdash; Manual</button>
+      <button class="api-tab-btn" onclick="showApiTab(2)">PCEC Steps &mdash; Full Control</button>
+    </div>
+
+    <!-- Tab 0: wrap() -->
+    <div class="api-tab-content active" id="api-tab-0">
+      <div class="api-code"><span class="kw">import</span> { <span class="fn">wrap</span> } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="cm">// Wrap ANY async function. That's it.</span>
+<span class="kw">const</span> resilientPay = <span class="fn">wrap</span>(payInvoice);
+<span class="kw">const</span> resilientSwap = <span class="fn">wrap</span>(dexSwapFunction);
+<span class="kw">const</span> resilientTransfer = <span class="fn">wrap</span>(batchTransferFunction);
+
+<span class="cm">// Options (all optional)</span>
+<span class="kw">const</span> resilientPay = <span class="fn">wrap</span>(payInvoice, {
+  agentId: <span class="st">'payroll-bot'</span>,        <span class="cm">// identifies this agent in logs</span>
+  maxRetries: <span class="hl">3</span>,                  <span class="cm">// default 3</span>
+  verbose: <span class="hl">true</span>,                  <span class="cm">// log PCEC steps to console</span>
+});
+
+<span class="cm">// wrap() returns IDENTICAL function signature</span>
+<span class="cm">// TypeScript types are preserved — no type changes needed</span></div>
+      <div class="api-callout"><b>wrap()</b> is a transparent proxy. The caller doesn't know Helix exists. Input types, output types, error types &mdash; all preserved. Your tests don't change. Your calling code doesn't change.</div>
+    </div>
+
+    <!-- Tab 1: createEngine() -->
+    <div class="api-tab-content" id="api-tab-1">
+      <div class="api-code"><span class="kw">import</span> { <span class="fn">createEngine</span>, GeneMap } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="kw">const</span> { engine, geneMap } = <span class="fn">createEngine</span>({
+  projectName: <span class="st">'payroll-agent'</span>,
+  geneMapPath: <span class="st">'./my-genes.db'</span>,
+});
+
+<span class="cm">// Use in your own try/catch flow</span>
+<span class="kw">try</span> {
+  <span class="kw">await</span> <span class="fn">payEmployee</span>(invoice);
+} <span class="kw">catch</span> (error) {
+  <span class="kw">const</span> result = <span class="kw">await</span> engine.<span class="fn">repair</span>(error, {
+    agentId: <span class="st">'payroll-agent'</span>,
+    walletAddress: <span class="st">'0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18'</span>,
+    availableBalances: { USDC: <span class="hl">1200</span>, EURC: <span class="hl">500</span>, USDT: <span class="hl">300</span> },
+  });
+
+  <span class="kw">if</span> (result.success) {
+    console.<span class="fn">log</span>(<span class="st">`Repaired via ${result.winner.strategy} in ${result.totalMs}ms`</span>);
+    <span class="kw">await</span> <span class="fn">payEmployee</span>(invoice); <span class="cm">// retry</span>
+  } <span class="kw">else</span> {
+    console.<span class="fn">error</span>(<span class="st">'Beyond repair:'</span>, result.failure.details);
+    <span class="fn">notifyOperator</span>(result.failure);
+  }
+}
+
+<span class="cm">// Check engine stats</span>
+<span class="kw">const</span> stats = engine.<span class="fn">getStats</span>();
+<span class="cm">// { repairs: 47, savedRevenue: 12500, immuneHits: 31, geneCount: 12 }</span></div>
+      <div class="api-callout"><b>createEngine()</b> for custom error handling, inspecting repair results before retrying, or passing rich context (wallet balances, session state) to PCEC.</div>
+    </div>
+
+    <!-- Tab 2: PCEC Steps -->
+    <div class="api-tab-content" id="api-tab-2">
+      <div class="api-code"><span class="kw">import</span> { <span class="fn">perceive</span>, <span class="fn">construct</span>, <span class="fn">evaluate</span>, <span class="fn">commit</span> } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+<span class="kw">import</span> { GeneMap } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="kw">const</span> geneMap = <span class="kw">new</span> GeneMap(<span class="st">'./genes.db'</span>);
+
+<span class="cm">// P — Perceive: classify the failure</span>
+<span class="kw">const</span> failure = <span class="fn">perceive</span>(error, context);
+<span class="cm">// → { code: 'payment-insufficient', category: 'balance', severity: 'high',</span>
+<span class="cm">//    actualBalance: 12.50, requiredAmount: 500 }</span>
+
+<span class="cm">// Check Gene Map first (immunity check)</span>
+<span class="kw">const</span> existingGene = geneMap.<span class="fn">lookup</span>(failure.code, failure.category);
+<span class="kw">if</span> (existingGene) {
+  console.<span class="fn">log</span>(<span class="st">`IMMUNE: ${existingGene.strategy}`</span>);
+  <span class="cm">// Skip C+E, apply known fix</span>
+}
+
+<span class="cm">// C — Construct: generate repair candidates</span>
+<span class="kw">const</span> candidates = <span class="fn">construct</span>(failure, geneMap);
+
+<span class="cm">// E — Evaluate: score and rank</span>
+<span class="kw">const</span> ranked = <span class="fn">evaluate</span>(candidates, failure);
+<span class="cm">// ranked[0] = { strategy: 'swap_currency', score: 96, ... }</span>
+
+<span class="cm">// K — Commit: execute the winning strategy</span>
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">commit</span>(ranked[<span class="hl">0</span>], failure, context);
+
+<span class="cm">// Store Gene Capsule for next time</span>
+<span class="kw">if</span> (result.success) {
+  geneMap.<span class="fn">store</span>({
+    failureCode: failure.code, category: failure.category,
+    strategy: ranked[<span class="hl">0</span>].strategy,
+    params: { description: ranked[<span class="hl">0</span>].description },
+    successCount: <span class="hl">1</span>, avgRepairMs: totalMs,
+  });
+}</div>
+      <div class="api-callout"><b>Individual PCEC steps</b> exported for maximum flexibility. Build custom repair pipelines, add your own scoring, or create audit trails. Every function is pure and testable.</div>
+    </div>
+
+    <!-- Gene Map API -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-bright);margin:28px 0 10px">Gene Map API</h3>
+    <div class="api-code"><span class="kw">import</span> { GeneMap } <span class="kw">from</span> <span class="st">'@helix/tempo'</span>;
+
+<span class="kw">const</span> geneMap = <span class="kw">new</span> GeneMap(<span class="st">'./helix-genes.db'</span>);  <span class="cm">// SQLite file</span>
+<span class="cm">// Or: new GeneMap(':memory:')  for testing</span>
+
+<span class="cm">// ── Query ──</span>
+geneMap.<span class="fn">lookup</span>(<span class="st">'payment-insufficient'</span>, <span class="st">'balance'</span>);
+<span class="cm">// → GeneCapsule | null</span>
+
+geneMap.<span class="fn">list</span>();
+<span class="cm">// → GeneCapsule[] sorted by successCount DESC</span>
+
+geneMap.<span class="fn">immuneCount</span>();
+<span class="cm">// → number of unique patterns with known fixes</span>
+
+geneMap.<span class="fn">getSuccessRate</span>(<span class="st">'payment-insufficient'</span>, <span class="st">'swap_currency'</span>);
+<span class="cm">// → 0.92 (92% from history) or 0.5 if &lt; 3 samples</span>
+
+<span class="cm">// ── Store ──</span>
+geneMap.<span class="fn">store</span>({
+  failureCode: <span class="st">'payment-insufficient'</span>,
+  category: <span class="st">'balance'</span>,
+  strategy: <span class="st">'swap_currency'</span>,
+  params: { fromToken: <span class="st">'EURC'</span>, toToken: <span class="st">'USDC'</span> },
+  successCount: <span class="hl">1</span>, avgRepairMs: <span class="hl">380</span>,
+});
+<span class="cm">// INSERT or UPDATE — auto-increments successCount on conflict</span>
+
+geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite connection</span></div>
+
+    <!-- CLI Reference -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-bright);margin:28px 0 10px">CLI Reference</h3>
+    <table class="api-cmd-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>npx helix init</td><td style="color:var(--text-dim)">Interactive setup wizard &rarr; generates helix.config.json</td></tr>
+        <tr><td>npx helix status</td><td style="color:var(--text-dim)">Live PCEC event stream in terminal (colored P&rarr;C&rarr;E&rarr;C)</td></tr>
+        <tr><td>npx helix dash</td><td style="color:var(--text-dim)">Start dashboard server (Minecraft lab + benchmark)</td></tr>
+        <tr><td>npm run demo</td><td style="color:var(--text-dim)">Run 12 failure scenarios with repair + immunity demo</td></tr>
+        <tr><td>npm run benchmark</td><td style="color:var(--text-dim)">HumanEval benchmark (needs OPENAI_API_KEY) &mdash; 68%&rarr;90%</td></tr>
+        <tr><td style="color:var(--text-dim)">helix gene list</td><td style="color:var(--text-dim)">Phase 2: List all local Gene Capsules</td></tr>
+        <tr><td style="color:var(--text-dim)">helix gene push</td><td style="color:var(--text-dim)">Phase 2: Push Genes to HGP Network</td></tr>
+        <tr><td style="color:var(--text-dim)">helix gene pull</td><td style="color:var(--text-dim)">Phase 2: Pull community Genes</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Configuration -->
+    <h3 style="font-size:14px;font-weight:700;color:var(--text-bright);margin:28px 0 10px">Configuration &mdash; helix.config.json</h3>
+    <div class="api-conf-code">{
+  <span class="st">"projectName"</span>: <span class="st">"my-payment-agent"</span>,        <span class="cm">// your agent's name</span>
+  <span class="st">"walletAddress"</span>: <span class="st">"0x742d...f2bD18"</span>,       <span class="cm">// Tempo wallet for repairs</span>
+  <span class="st">"stablecoins"</span>: [<span class="st">"USDC"</span>, <span class="st">"EURC"</span>, <span class="st">"USDT"</span>], <span class="cm">// available for swaps</span>
+  <span class="st">"monthlyBudget"</span>: <span class="num">10000</span>,                   <span class="cm">// repair cost cap (USD)</span>
+  <span class="st">"maxRetries"</span>: <span class="num">3</span>,                          <span class="cm">// PCEC attempts before giving up</span>
+  <span class="st">"timeoutMs"</span>: <span class="num">30000</span>,                       <span class="cm">// per-repair timeout</span>
+  <span class="st">"dashboardPort"</span>: <span class="num">3710</span>,                    <span class="cm">// dashboard server port</span>
+  <span class="st">"verbose"</span>: <span class="num">true</span>,                          <span class="cm">// log PCEC to console</span>
+  <span class="st">"geneMapPath"</span>: <span class="st">"./helix-genes.db"</span>         <span class="cm">// SQLite file location</span>
+}</div>
+    <div class="api-callout"><b>monthlyBudget</b> is a safety cap &mdash; PCEC won't execute repairs that exceed this budget. All candidates have cost estimates, and Evaluate rejects above threshold. Your wallet's signing key never touches the Gene Map.</div>
+
+    <!-- TypeScript Types (collapsible) -->
+    <div style="margin-top:24px">
+      <div class="sa-card" onclick="this.classList.toggle('open')" style="cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:12px 16px;background:var(--card)">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:700;color:var(--text-bright)">TypeScript Types Reference</span>
+          <span class="sa-expand" style="font-size:10px;color:var(--text-dim)">click to expand</span>
+        </div>
+        <div class="sa-card-detail">
+          <div class="api-code"><span class="cm">// What wrap() returns</span>
+<span class="kw">type</span> WrappedFunction&lt;T&gt; = (...args: <span class="tp">Parameters</span>&lt;T&gt;) =&gt; <span class="tp">ReturnType</span>&lt;T&gt;;
+
+<span class="cm">// What repair() returns</span>
+<span class="kw">interface</span> RepairResult {
+  success: <span class="tp">boolean</span>;
+  failure: <span class="tp">FailureClassification</span>;
+  candidates: <span class="tp">RepairCandidate</span>[];
+  winner: <span class="tp">RepairCandidate</span> | <span class="tp">null</span>;
+  gene: <span class="tp">GeneCapsule</span> | <span class="tp">null</span>;
+  immune: <span class="tp">boolean</span>;           <span class="cm">// true = Gene Map hit, instant fix</span>
+  totalMs: <span class="tp">number</span>;
+  revenueProtected: <span class="tp">number</span>;
+}
+
+<span class="cm">// What Perceive outputs</span>
+<span class="kw">interface</span> FailureClassification {
+  code: <span class="tp">MppErrorCode</span>;        <span class="cm">// 'payment-insufficient' | 'invalid-challenge' | ...</span>
+  category: <span class="tp">FailureCategory</span>; <span class="cm">// 'balance' | 'session' | 'currency' | ...</span>
+  severity: <span class="tp">Severity</span>;        <span class="cm">// 'low' | 'medium' | 'high' | 'critical'</span>
+  details: <span class="tp">string</span>;
+  timestamp: <span class="tp">number</span>;
+  actualBalance?: <span class="tp">number</span>;
+  requiredAmount?: <span class="tp">number</span>;
+}
+
+<span class="cm">// What Construct generates</span>
+<span class="kw">interface</span> RepairCandidate {
+  id: <span class="tp">string</span>;
+  strategy: <span class="tp">string</span>;
+  description: <span class="tp">string</span>;
+  estimatedCostUsd: <span class="tp">number</span>;
+  estimatedSpeedMs: <span class="tp">number</span>;
+  requirements: <span class="tp">string</span>[];
+  score: <span class="tp">number</span>;             <span class="cm">// 0-100, set by Evaluate</span>
+  successProbability: <span class="tp">number</span>; <span class="cm">// from Gene Map history</span>
+}
+
+<span class="cm">// What Gene Map stores</span>
+<span class="kw">interface</span> GeneCapsule {
+  failureCode: <span class="tp">MppErrorCode</span>;
+  category: <span class="tp">FailureCategory</span>;
+  strategy: <span class="tp">string</span>;
+  params: Record&lt;<span class="tp">string</span>, <span class="tp">unknown</span>&gt;;
+  successCount: <span class="tp">number</span>;
+  avgRepairMs: <span class="tp">number</span>;
+}</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1710,6 +2067,17 @@ new MutationObserver(() => {
     observer.observe(el);
   });
 }).observe(document.body, { childList: true, subtree: true });
+
+// API tab switching
+function showApiTab(idx) {
+  document.querySelectorAll('.api-tab-content').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  const colors = ['active-green', 'active', 'active-purple'];
+  document.querySelectorAll('.api-tab-btn').forEach((btn, i) => {
+    btn.className = 'api-tab-btn' + (i === idx ? ' ' + colors[i] : '');
+  });
+}
 </script>
 </body>
 </html>

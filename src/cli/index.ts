@@ -154,6 +154,7 @@ async function dash() {
   const docsPath = join(__dirname, '..', 'dashboard', 'docs.html');
   const benchmarkPath = join(__dirname, '..', 'dashboard', 'benchmark.html');
   const cheatsheetPath = join(__dirname, '..', 'dashboard', 'cheatsheet.html');
+  const milestonePath = join(__dirname, '..', 'dashboard', 'milestone.html');
   app.get('/', (_req, res) => {
     res.sendFile(dashboardPath);
   });
@@ -171,6 +172,11 @@ async function dash() {
   // Serve cheatsheet
   app.get('/cheatsheet', (_req, res) => {
     res.sendFile(cheatsheetPath);
+  });
+
+  // Serve milestone
+  app.get('/milestone', (_req, res) => {
+    res.sendFile(milestonePath);
   });
 
   // Benchmark results API
