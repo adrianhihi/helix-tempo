@@ -85,3 +85,8 @@ src/
 - SQLite via better-sqlite3
 - Express (dashboard server)
 - Canvas-based isometric dashboard (zero dependencies)
+
+## Contributors
+@adrianhihi
+@nicholasvandy
+
