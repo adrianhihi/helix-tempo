@@ -279,6 +279,106 @@
   footer a:hover { text-decoration: underline; }
   footer .links { margin-top: 10px; display: flex; gap: 20px; justify-content: center; }
 
+  /* ── Deep Architecture ────────── */
+  .sa-wrapper { position: relative; padding-left: 36px; }
+  .sa-feedback {
+    position: absolute; left: 6px; top: 80px; bottom: 80px; width: 2px;
+    border-left: 2px dashed rgba(167,139,250,0.25);
+    animation: feedbackPulse 3s ease infinite;
+  }
+  @keyframes feedbackPulse { 0%,100%{border-color:rgba(167,139,250,0.15)} 50%{border-color:rgba(167,139,250,0.45)} }
+  .sa-feedback-label {
+    position: absolute; left: -6px; top: 50%; transform: translateY(-50%) rotate(-90deg);
+    font-family: var(--mono); font-size: 9px; letter-spacing: 1px; color: var(--purple);
+    white-space: nowrap; opacity: 0.7;
+  }
+  .sa-feedback-arrow {
+    position: absolute; left: 1px; top: 70px; width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-bottom: 7px solid rgba(167,139,250,0.4); transform: translateX(-5px);
+  }
+  .sa-node {
+    text-align: center; padding: 10px 16px; border-radius: 8px;
+    background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    max-width: 280px; margin: 0 auto;
+  }
+  .sa-connector {
+    text-align: center; padding: 10px 0; font-size: 13px; color: var(--text-dim);
+    position: relative;
+  }
+  .sa-connector .sa-clabel {
+    font-family: var(--mono); font-size: 10px; color: var(--amber);
+    display: inline-block; margin-left: 8px; opacity: 0.8;
+  }
+  .sa-layer {
+    border-radius: 12px; padding: 18px 20px; margin: 6px 0;
+    border-left: 4px solid var(--border); background: rgba(255,255,255,0.015);
+  }
+  .sa-layer.l-blue { border-left-color: var(--blue); background: rgba(96,165,250,0.02); }
+  .sa-layer.l-teal { border-left-color: var(--teal); background: rgba(45,212,191,0.02); }
+  .sa-layer.l-amber { border-left-color: var(--amber); background: rgba(240,160,48,0.025); }
+  .sa-layer.l-purple { border-left-color: var(--purple); background: rgba(167,139,250,0.02); }
+  .sa-layer-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+  }
+  .sa-layer-head h3 {
+    font-family: var(--sans); font-size: 15px; font-weight: 700; color: var(--text-bright);
+  }
+  .sa-layer.l-blue .sa-layer-head h3 { color: var(--blue); }
+  .sa-layer.l-teal .sa-layer-head h3 { color: var(--teal); }
+  .sa-layer.l-amber .sa-layer-head h3 { color: var(--amber); }
+  .sa-layer.l-purple .sa-layer-head h3 { color: var(--purple); }
+  .sa-badge {
+    font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-dim);
+  }
+  .sa-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sa-card {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 14px; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  }
+  .sa-card:hover { border-color: rgba(255,255,255,0.12); background: rgba(255,255,255,0.035); }
+  .sa-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 4px; }
+  .sa-card-name { font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--text-bright); }
+  .sa-status {
+    font-size: 8px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 6px;
+    border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+  }
+  .sa-status.built { background: rgba(74,222,128,0.12); color: var(--green); }
+  .sa-status.partial { background: rgba(240,160,48,0.12); color: var(--amber); }
+  .sa-status.roadmap { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+  .sa-card-sub { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+  .sa-card-detail {
+    max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s;
+    padding: 0;
+  }
+  .sa-card.open .sa-card-detail {
+    max-height: 600px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.04); margin-top: 6px;
+  }
+  .sa-card-detail p {
+    font-size: 11px; color: var(--text-dim); line-height: 1.7; margin-bottom: 6px;
+  }
+  .sa-card-detail p b { color: var(--text); font-weight: 600; }
+  .sa-card-detail .sa-dt {
+    font-family: var(--mono); font-size: 9px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-dim);
+    margin-top: 8px; margin-bottom: 2px;
+  }
+  .sa-card .sa-expand {
+    font-size: 9px; color: var(--text-dim); font-family: var(--mono);
+    transition: color 0.2s;
+  }
+  .sa-card:hover .sa-expand { color: var(--amber); }
+  .sa-card.open .sa-expand { display: none; }
+  .sa-legend {
+    display: flex; gap: 16px; margin-top: 20px; font-size: 11px; color: var(--text-dim);
+    font-family: var(--mono); flex-wrap: wrap;
+  }
+  .sa-legend span { display: flex; align-items: center; gap: 4px; }
+
   @media (max-width: 700px) {
     .problem-grid, .usecase-grid, .numbers-grid { grid-template-columns: 1fr; }
     .pcec-flow { flex-direction: column; }
@@ -288,6 +388,9 @@
     nav .links { gap: 12px; }
     nav .links a { font-size: 10px; }
     .comp-table { font-size: 10px; }
+    .sa-cards { grid-template-columns: 1fr; }
+    .sa-wrapper { padding-left: 0; }
+    .sa-feedback, .sa-feedback-label, .sa-feedback-arrow { display: none; }
   }
 </style>
 </head>
@@ -301,6 +404,7 @@
     <a href="#scenarios">Scenarios</a>
     <a href="#use-cases">Use Cases</a>
     <a href="#architecture">Architecture</a>
+    <a href="#deep-dive">Deep Dive</a>
     <a href="#quickstart">Quickstart</a>
     <a href="#numbers">Numbers</a>
     <a href="/" class="lab-btn">Open Lab &rarr;</a>
@@ -434,7 +538,7 @@
   </div>
 </section>
 
-<!-- ═══════════ ARCHITECTURE ═══════════ -->
+<!-- ═══════════ ARCHITECTURE (Quick) ═══════════ -->
 <section id="architecture">
   <div class="fade-in">
     <h2>Architecture</h2>
@@ -460,6 +564,245 @@
         <p>Payment Lanes + DEX + TIP-20 Stablecoins</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════ DEEP DIVE ARCHITECTURE ═══════════ -->
+<section id="deep-dive" style="max-width:1060px">
+  <div class="fade-in">
+    <h2>Deep Dive: System Architecture</h2>
+    <p class="section-sub">The full vision &mdash; 4 layers, 12 components, an evolving payment operating system for AI agents.</p>
+
+    <div class="sa-wrapper">
+
+      <!-- Feedback loop -->
+      <div class="sa-feedback">
+        <div class="sa-feedback-arrow"></div>
+        <div class="sa-feedback-label">EVOLUTION FEEDS BACK &uarr;</div>
+      </div>
+
+      <!-- Top node -->
+      <div class="sa-node" style="margin-bottom:4px"><b style="color:var(--text-bright)">User Objective</b><br>Agent receives a goal from the user</div>
+      <div class="sa-connector">&darr;<span class="sa-clabel">&nbsp;Objective Decomposition Engine</span></div>
+
+      <!-- Layer 1 -->
+      <div class="sa-layer l-blue">
+        <div class="sa-layer-head">
+          <h3>&#9312; Intent Understanding</h3>
+          <span class="sa-badge">PLANNING &amp; DECOMPOSITION</span>
+        </div>
+        <div class="sa-cards">
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Intent Parser</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Parse &amp; validate goals</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Understands natural language objectives. &ldquo;Pay 100 employees in 5 currencies&rdquo; &rarr; structured intent with parameters, constraints, and success criteria.</p>
+              <div class="sa-dt">Why</div>
+              <p>Without this, developers must hard-code every task. With it, agents understand open-ended objectives and can plan autonomously.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p>Not yet implemented. Currently the agent&rsquo;s goal is defined by the developer in code. <b>Phase 3 feature.</b></p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Task Dependency Graph</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Build execution order</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Decomposes a complex goal into a DAG of subtasks: [check balance] &rarr; [swap currencies] &rarr; [batch transfer] &rarr; [verify receipts]. Handles parallel, serial, and conditional branches.</p>
+              <div class="sa-dt">Why</div>
+              <p>Real-world agent tasks are multi-step. A flat retry loop can&rsquo;t handle &ldquo;step 3 failed but steps 1&ndash;2 already executed.&rdquo;</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p>Not yet. Currently <code>wrap()</code> handles single function calls. Multi-step orchestration is <b>Phase 3.</b></p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Execution Orchestrator</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Dispatch &amp; coordinate</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Executes the DAG &mdash; dispatches tasks to the right executor, handles timeouts, tracks progress, manages rollback if needed.</p>
+              <div class="sa-dt">Why</div>
+              <p>This is the scheduler. Like Airflow for agent tasks, but with PCEC self-repair at every step.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p>Not yet. Currently agent runs single function, <code>wrap()</code> catches errors. Full orchestration is <b>Phase 3.</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-connector">&darr;<span class="sa-clabel">&nbsp;Execution Layer</span></div>
+
+      <!-- Layer 2 -->
+      <div class="sa-layer l-teal">
+        <div class="sa-layer-head">
+          <h3>&#9313; Distributed Execution</h3>
+          <span class="sa-badge">SKILLS &amp; COORDINATION</span>
+        </div>
+        <div class="sa-cards">
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Skills Framework</span><span class="sa-status built">BUILT</span></div>
+            <div class="sa-card-sub">Concrete repair techniques</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>The specific &ldquo;how-to&rdquo; repair strategies. Each skill is a concrete action: <code>swap_currency</code>, <code>renew_session</code>, <code>retry_with_receipt</code>, <code>split_swap</code>, <code>refresh_nonce</code>, <code>switch_stablecoin</code>.</p>
+              <div class="sa-dt">Why</div>
+              <p>PCEC Construct generates candidates FROM the skills library. Skills are the atoms of repair.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Fully implemented.</b> 10 failure categories &times; 2&ndash;3 strategies each = ~25 skills in <code>pcec.ts</code>. Each skill has cost estimate, speed estimate, and requirements list.</p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Experience Layer</span><span class="sa-status partial">PARTIAL</span></div>
+            <div class="sa-card-sub">Causal meta-learning</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Not just &ldquo;what worked&rdquo; but &ldquo;WHY it worked and WHEN to use it.&rdquo; Extracts causal reasoning: &ldquo;EURC&rarr;USDC swap works better at UTC 2&ndash;4am because DEX liquidity is higher.&rdquo;</p>
+              <div class="sa-dt">Why</div>
+              <p>Skills alone are a toolbox. Experience tells you which tool to grab before you even open the box. This is the meta-learning layer.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Gene Map stores success/failure history</b> &mdash; <code>success_count</code>, <code>avg_repair_ms</code>, <code>last_used_at</code>. But it doesn&rsquo;t yet extract causal patterns. The data is there; the reasoning layer is <b>Phase 2.</b></p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Multi-Agent Mesh</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Distributed execution</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Multiple agents collaborating on a single objective. Agent A handles currency swaps, Agent B handles execution, Agent C handles verification. They communicate via the mesh and share state.</p>
+              <div class="sa-dt">Why</div>
+              <p>Complex payment workflows (cascade A&rarr;B&rarr;C, batch payroll across corridors) need distributed execution. One agent can&rsquo;t hold all the context.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Cascade scenario (#9) demonstrates the concept</b> &mdash; A&rarr;B&rarr;C failure chain with refund waterfall. True mesh execution is <b>Phase 3.</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-connector">&darr;<span class="sa-clabel">&nbsp;Resilience Layer</span></div>
+
+      <!-- Layer 3 — CORE -->
+      <div class="sa-layer l-amber" style="border-left-width:5px">
+        <div class="sa-layer-head">
+          <h3>&#9314; Self-Healing &amp; Confidence</h3>
+          <span class="sa-badge" style="background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.25);color:var(--amber)">CORE OF HELIX</span>
+        </div>
+        <div class="sa-cards">
+          <div class="sa-card" onclick="this.classList.toggle('open')" style="border-color:rgba(240,160,48,0.15)">
+            <div class="sa-card-head"><span class="sa-card-name">PCEC Engine</span><span class="sa-status built">BUILT</span></div>
+            <div class="sa-card-sub">Self-repair loop &mdash; the heart of the system</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p><b>Perceive &rarr; Construct &rarr; Evaluate &rarr; Commit.</b> Classifies every failure into 10 categories, generates repair candidates, scores by cost/speed/history, executes the best one, stores the result.</p>
+              <div class="sa-dt">Why</div>
+              <p>This is what makes Helix different. It doesn&rsquo;t just retry &mdash; it <b>understands what broke</b> and picks the optimal fix.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Fully implemented.</b> <code>src/core/pcec.ts</code> &mdash; complete P/C/E/K loop with all 10 failure handlers. Proven by HumanEval benchmark: <b>68% &rarr; 90%</b>. Perceive parses MPP 402 errors (RFC 9457). Evaluate scores by speed (30pts), cost, requirements, severity matching.</p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Predictive Failure Engine</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Anticipate before failure</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Uses Gene Map history to predict failures BEFORE they happen. &ldquo;This service has failed 3 times this week at 2am. It&rsquo;s 1:55am. Pre-emptively switch to backup.&rdquo;</p>
+              <div class="sa-dt">Why</div>
+              <p>Reactive repair (PCEC) costs time and sometimes money. Predictive avoidance costs nothing &mdash; you just don&rsquo;t go down the bad path.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p>Not yet. But the data is accumulating in Gene Map. Every repair creates a timestamped Gene Capsule. The prediction layer just needs to read those patterns. <b>Phase 2.</b></p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Confidence Layer</span><span class="sa-status partial">PARTIAL</span></div>
+            <div class="sa-card-sub">Uncertainty bounds</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Assigns a confidence score to every repair. &ldquo;95% confident this swap will work&rdquo; vs &ldquo;40% confident this timeout increase will help.&rdquo; Enables risk-adjusted decisions.</p>
+              <div class="sa-dt">Why</div>
+              <p>Without confidence, PCEC is a black box. With it, the agent can decide: low confidence? Ask the human. High confidence? Just do it.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Evaluate scores (0&ndash;100) are a simplified confidence.</b> Based on speed/cost/requirements math. Not yet probabilistic (would need historical success rates per strategy per context). <b>Phase 2.</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-connector">&darr;<span class="sa-clabel">&nbsp;Evolution Layer</span></div>
+
+      <!-- Layer 4 -->
+      <div class="sa-layer l-purple">
+        <div class="sa-layer-head">
+          <h3>&#9315; Compounding Moat</h3>
+          <span class="sa-badge" style="background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.2);color:var(--purple)">NETWORK EFFECT</span>
+        </div>
+        <div class="sa-cards">
+          <div class="sa-card" onclick="this.classList.toggle('open')" style="border-color:rgba(167,139,250,0.15)">
+            <div class="sa-card-head"><span class="sa-card-name">Gene Map</span><span class="sa-status built">BUILT</span></div>
+            <div class="sa-card-sub">Shared knowledge network</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>SQLite database storing every successful repair as a Gene Capsule: <code>failure_code</code>, <code>category</code>, <code>strategy</code>, <code>params</code>, <code>success_count</code>, <code>avg_repair_ms</code>. Lookup by pattern &rarr; instant fix if seen before (&ldquo;immune&rdquo;).</p>
+              <div class="sa-dt">Why</div>
+              <p>This is the learning mechanism. 9 of 14 failures in our benchmark were resolved by Gene Map hits &mdash; instant, zero-cost.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Fully implemented.</b> <code>src/core/gene-map.ts</code> &mdash; SQLite with WAL mode. <code>lookup()</code> returns existing gene + increments success_count. <code>store()</code> upserts.</p>
+              <div class="sa-dt">Vision</div>
+              <p>Currently local to each agent. Phase 2: <code>helix gene push/pull</code> for community sharing. Phase 3: on-chain Gene Registry where contributors earn micropayments.</p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Gene Economy</span><span class="sa-status roadmap">ROADMAP</span></div>
+            <div class="sa-card-sub">Incentive marketplace</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Agent A discovers a repair strategy &rarr; pushes Gene Capsule to public registry &rarr; Agent B pays micropayment (via MPP session) to use it &rarr; Agent A earns revenue. Reputation scoring ensures quality.</p>
+              <div class="sa-dt">Why</div>
+              <p>Open-source contributions need incentives at scale. You fix one failure, everyone benefits, you get paid. Network effect with economic gravity.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p>Not yet implemented. But Gene Capsules are already structured JSON records that can be serialized, shared, and verified. <b>Phase 3.</b></p>
+            </div>
+          </div>
+          <div class="sa-card" onclick="this.classList.toggle('open')">
+            <div class="sa-card-head"><span class="sa-card-name">Execution Replay</span><span class="sa-status partial">PARTIAL</span></div>
+            <div class="sa-card-sub">Deterministic audit trail</div>
+            <div class="sa-expand">click to expand</div>
+            <div class="sa-card-detail">
+              <div class="sa-dt">What</div>
+              <p>Every PCEC repair can be replayed deterministically. Same input error + same Gene Map state + same time &rarr; identical repair path. Enables debugging, auditing, and compliance.</p>
+              <div class="sa-dt">Why</div>
+              <p>Financial systems need audit trails. Agents operating autonomously need even more accountability than human operators.</p>
+              <div class="sa-dt">Helix Tempo</div>
+              <p><b>Benchmark uses seed-based replay</b> (seed=42 produces identical results). SSE event bus logs all PCEC steps. No formal replay mechanism yet. <b>Phase 2.</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sa-connector">&darr;</div>
+
+      <!-- Bottom node -->
+      <div class="sa-node"><b style="color:var(--text-bright)">World / External Services</b><br>Tempo blockchain &middot; MPP services &middot; DEX pools &middot; Off-ramp providers</div>
+
+    </div><!-- /sa-wrapper -->
+
+    <!-- Legend -->
+    <div class="sa-legend">
+      <span><span class="sa-status built" style="display:inline-block">BUILT</span> Implemented &amp; proven</span>
+      <span><span class="sa-status partial" style="display:inline-block">PARTIAL</span> Data exists, reasoning layer next</span>
+      <span><span class="sa-status roadmap" style="display:inline-block">ROADMAP</span> Designed, not yet built</span>
+    </div>
+
   </div>
 </section>
 
