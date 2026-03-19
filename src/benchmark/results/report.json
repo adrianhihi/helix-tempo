@@ -1,0 +1,57 @@
+{
+  "timestamp": "2026-03-19T05:18:21.715Z",
+  "model": "gpt-4o-mini",
+  "tasks": 50,
+  "seed": 42,
+  "failureRates": {
+    "rateLimit429": 0.08,
+    "timeout": 0.05,
+    "contextOverflow": 0.03,
+    "jsonParse": 0.02,
+    "serverError": 0.02
+  },
+  "baseline": {
+    "completed": 36,
+    "failed": 14,
+    "completionRate": 72,
+    "passRate": 68,
+    "avgTimeMs": 1067.38,
+    "failures": {
+      "timeout": 5,
+      "rate_limit": 3,
+      "context_overflow": 3,
+      "server_error": 3
+    },
+    "modelQualityFails": 2
+  },
+  "helix": {
+    "completed": 48,
+    "failed": 2,
+    "completionRate": 96,
+    "passRate": 90,
+    "avgTimeMs": 1166.2,
+    "failures": {
+      "context_overflow": 1,
+      "server_error": 1
+    },
+    "repairs": {
+      "timeout": 5,
+      "rate_limit": 3,
+      "context_overflow": 2,
+      "server_error": 2
+    },
+    "unrecoverable": {
+      "context_overflow": 1,
+      "server_error": 1
+    },
+    "modelQualityFails": 3,
+    "genesCaptured": 3,
+    "immuneHits": 9
+  },
+  "delta": {
+    "completionRate": "+24.0%",
+    "passRate": "+22.0%",
+    "tasksRecovered": 12,
+    "unrecoverable": 2
+  }
+}

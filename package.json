@@ -1,0 +1,33 @@
+{
+  "name": "@helix/tempo",
+  "version": "0.1.0",
+  "description": "Self-healing payment infrastructure SDK for AI agents on Tempo blockchain",
+  "type": "module",
+  "main": "dist/core/index.js",
+  "types": "dist/core/index.d.ts",
+  "bin": {
+    "helix": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/demo/run.ts",
+    "demo": "tsx src/demo/run.ts",
+    "helix": "tsx src/cli/index.ts",
+    "dash": "tsx src/cli/index.ts dash",
+    "benchmark": "tsx src/benchmark/runner.ts",
+    "benchmark:quick": "HELIX_TASKS=10 tsx src/benchmark/runner.ts"
+  },
+  "keywords": ["tempo", "payments", "ai-agents", "self-healing", "mpp"],
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

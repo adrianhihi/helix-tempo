@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix × Tempo — Self-Healing Payments for AI Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber: #f0a030;
+    --amber-dim: rgba(240,160,48,0.12);
+    --green: #4ade80;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --teal: #2dd4bf;
+    --bg: #0a0c10;
+    --surface: #0e1018;
+    --card: rgba(255,255,255,0.035);
+    --border: rgba(255,255,255,0.07);
+    --text: #c8cad0;
+    --text-dim: #5a5e6a;
+    --text-bright: #eaecf0;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Outfit', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Nav ─────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px; height: 52px;
+  }
+  nav .brand {
+    font-family: var(--sans); font-weight: 800; font-size: 15px;
+    color: var(--amber); letter-spacing: 1px; text-decoration: none;
+  }
+  nav .links { display: flex; gap: 24px; align-items: center; }
+  nav .links a {
+    font-size: 12px; font-weight: 500; color: var(--text-dim);
+    text-decoration: none; transition: color 0.2s; letter-spacing: 0.3px;
+  }
+  nav .links a:hover { color: var(--text-bright); }
+  nav .lab-btn {
+    font-family: var(--mono); font-size: 11px; padding: 6px 14px;
+    background: var(--amber-dim); border: 1px solid rgba(240,160,48,0.25);
+    color: var(--amber); border-radius: 6px; text-decoration: none;
+    font-weight: 600; transition: all 0.2s;
+  }
+  nav .lab-btn:hover { background: rgba(240,160,48,0.2); border-color: var(--amber); }
+
+  /* ── Sections ───────────────────── */
+  section {
+    max-width: 960px; margin: 0 auto; padding: 100px 32px 60px;
+  }
+  section:first-of-type { padding-top: 140px; }
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  h2 {
+    font-family: var(--sans); font-weight: 800; font-size: 28px;
+    color: var(--text-bright); margin-bottom: 8px; letter-spacing: -0.5px;
+  }
+  .section-sub { font-size: 14px; color: var(--text-dim); margin-bottom: 32px; max-width: 560px; }
+
+  /* ── Hero ────────────────────────── */
+  #hero { text-align: center; padding-top: 160px; position: relative; }
+  #hero::before {
+    content: ''; position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+    width: 480px; height: 480px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,160,48,0.08) 0%, rgba(45,212,191,0.04) 40%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-title {
+    font-family: var(--sans); font-weight: 800; font-size: 52px;
+    color: var(--text-bright); letter-spacing: -1.5px; line-height: 1.1;
+    position: relative;
+  }
+  .hero-title .dna { font-size: 42px; }
+  .hero-title .accent { color: var(--amber); }
+  .hero-title .accent2 { color: var(--teal); }
+  .hero-sub {
+    font-size: 18px; color: var(--text); margin-top: 16px; max-width: 520px;
+    margin-left: auto; margin-right: auto; font-weight: 400;
+  }
+  .hero-oneliner {
+    font-family: var(--mono); font-size: 13px; color: var(--text-dim);
+    margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;
+    line-height: 1.7;
+  }
+  .hero-buttons { margin-top: 32px; display: flex; gap: 12px; justify-content: center; }
+  .btn-primary {
+    font-family: var(--sans); font-weight: 700; font-size: 13px;
+    padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer;
+    background: var(--amber); color: #000; transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #f5b040; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(240,160,48,0.3); }
+  .btn-outline {
+    font-family: var(--sans); font-weight: 700; font-size: 13px;
+    padding: 10px 24px; border-radius: 8px; cursor: pointer;
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+    transition: all 0.2s; text-decoration: none;
+  }
+  .btn-outline:hover { border-color: var(--text-dim); color: var(--text-bright); }
+
+  /* ── Problem cards ──────────────── */
+  .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .problem-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: border-color 0.3s;
+  }
+  .problem-card:hover { border-color: rgba(248,113,113,0.3); }
+  .problem-card h3 {
+    font-size: 15px; font-weight: 700; color: var(--red); margin-bottom: 8px;
+  }
+  .problem-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+  .stat-line {
+    margin-top: 24px; padding: 14px 18px; border-radius: 8px;
+    background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.1);
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim); line-height: 1.7;
+  }
+  .stat-line b { color: var(--red); }
+
+  /* ── PCEC flow ──────────────────── */
+  .pcec-flow { display: flex; gap: 0; align-items: stretch; }
+  .pcec-card {
+    flex: 1; padding: 20px; background: var(--card); border: 1px solid var(--border);
+    position: relative; transition: border-color 0.3s;
+  }
+  .pcec-card:first-child { border-radius: 12px 0 0 12px; }
+  .pcec-card:last-child { border-radius: 0 12px 12px 0; }
+  .pcec-card:hover { border-color: var(--amber); }
+  .pcec-card .letter {
+    font-family: var(--mono); font-size: 28px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .pcec-card:nth-child(1) .letter { color: var(--red); }
+  .pcec-card:nth-child(2) .letter { color: var(--blue); }
+  .pcec-card:nth-child(3) .letter { color: var(--purple); }
+  .pcec-card:nth-child(4) .letter { color: var(--green); }
+  .pcec-card h3 { font-size: 14px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+  .pcec-card p { font-size: 12px; color: var(--text-dim); }
+  .pcec-arrow {
+    display: flex; align-items: center; color: var(--text-dim); font-size: 18px;
+    padding: 0 2px; flex-shrink: 0;
+  }
+  .gene-note {
+    margin-top: 20px; font-family: var(--mono); font-size: 12px;
+    color: var(--text-dim); text-align: center; padding: 12px;
+    background: rgba(167,139,250,0.05); border: 1px solid rgba(167,139,250,0.1);
+    border-radius: 8px;
+  }
+  .gene-note b { color: var(--purple); }
+
+  /* ── Scenario table ─────────────── */
+  .scenario-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .scenario-table th {
+    text-align: left; padding: 10px 12px; font-weight: 600; font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .scenario-table td {
+    padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+  }
+  .scenario-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .scenario-table .num { color: var(--text-dim); font-family: var(--mono); font-weight: 600; }
+  .scenario-table .name { color: var(--text-bright); font-weight: 600; }
+  .scenario-table .err { font-family: var(--mono); color: var(--red); font-size: 11px; }
+  .scenario-table .fix { font-family: var(--mono); color: var(--green); font-size: 11px; }
+  .sc-tag {
+    font-size: 9px; padding: 2px 6px; border-radius: 10px; font-weight: 700;
+    display: inline-block;
+  }
+  .sc-tag.live { background: rgba(74,222,128,0.12); color: var(--green); }
+  .sc-tag.mock { background: rgba(96,165,250,0.12); color: var(--blue); }
+  .sc-tag.vision { background: rgba(167,139,250,0.12); color: var(--purple); }
+
+  /* ── Use Cases ──────────────────── */
+  .usecase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .usecase-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: border-color 0.3s;
+  }
+  .usecase-card:hover { border-color: rgba(240,160,48,0.3); }
+  .usecase-card h3 { font-size: 14px; font-weight: 700; color: var(--amber); margin-bottom: 8px; }
+  .usecase-card p { font-size: 13px; color: var(--text-dim); line-height: 1.6; }
+
+  /* ── Architecture ───────────────── */
+  .arch-stack { display: flex; flex-direction: column; gap: 0; max-width: 520px; margin: 0 auto; }
+  .arch-layer {
+    padding: 16px 20px; text-align: center; border: 1px solid var(--border);
+    position: relative;
+  }
+  .arch-layer:first-child { border-radius: 12px 12px 0 0; }
+  .arch-layer:last-child { border-radius: 0 0 12px 12px; }
+  .arch-layer h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .arch-layer p { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
+  .arch-layer.agent { background: rgba(255,255,255,0.02); }
+  .arch-layer.agent h4 { color: var(--text); }
+  .arch-layer.helix { background: rgba(240,160,48,0.05); border-color: rgba(240,160,48,0.15); }
+  .arch-layer.helix h4 { color: var(--amber); }
+  .arch-layer.mpp { background: rgba(45,212,191,0.04); border-color: rgba(45,212,191,0.12); }
+  .arch-layer.mpp h4 { color: var(--teal); }
+  .arch-layer.tempo { background: rgba(96,165,250,0.04); border-color: rgba(96,165,250,0.12); }
+  .arch-layer.tempo h4 { color: var(--blue); }
+  .arch-arrow {
+    text-align: center; padding: 4px 0; color: var(--text-dim); font-size: 14px;
+  }
+
+  /* ── Code blocks ────────────────── */
+  .step-block { margin-bottom: 28px; }
+  .step-num {
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    color: var(--amber); letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .step-block h3 { font-size: 15px; font-weight: 700; color: var(--text-bright); margin-bottom: 10px; }
+  pre {
+    background: #0c0e14; border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; overflow-x: auto; font-family: var(--mono);
+    font-size: 12.5px; line-height: 1.7; color: var(--text);
+  }
+  pre .comment { color: #4a5568; }
+  pre .keyword { color: var(--purple); }
+  pre .string { color: var(--green); }
+  pre .fn { color: var(--blue); }
+  pre .type { color: var(--teal); }
+  pre .cmd { color: var(--amber); }
+
+  /* ── Comparison table ───────────── */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .comp-table th {
+    padding: 10px 12px; text-align: left; font-weight: 600; font-size: 10px;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .comp-table td {
+    padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 12px;
+  }
+  .comp-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .comp-table .cap { color: var(--text); font-weight: 500; }
+  .check { color: var(--green); font-weight: 700; }
+  .cross { color: #444; }
+  .comp-table td:last-child { font-weight: 600; }
+
+  /* ── Numbers ────────────────────── */
+  .numbers-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .num-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px;
+  }
+  .num-card .big {
+    font-family: var(--sans); font-size: 32px; font-weight: 800;
+    color: var(--amber); letter-spacing: -1px; margin-bottom: 4px;
+  }
+  .num-card p { font-size: 13px; color: var(--text-dim); }
+
+  /* ── Footer ─────────────────────── */
+  footer {
+    text-align: center; padding: 48px 32px;
+    border-top: 1px solid var(--border); font-size: 12px; color: var(--text-dim);
+  }
+  footer a { color: var(--amber); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .links { margin-top: 10px; display: flex; gap: 20px; justify-content: center; }
+
+  @media (max-width: 700px) {
+    .problem-grid, .usecase-grid, .numbers-grid { grid-template-columns: 1fr; }
+    .pcec-flow { flex-direction: column; }
+    .pcec-card:first-child, .pcec-card:last-child { border-radius: 12px; }
+    .pcec-arrow { justify-content: center; transform: rotate(90deg); }
+    .hero-title { font-size: 32px; }
+    nav .links { gap: 12px; }
+    nav .links a { font-size: 10px; }
+    .comp-table { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/docs" class="brand">HELIX &times; TEMPO</a>
+  <div class="links">
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How it Works</a>
+    <a href="#scenarios">Scenarios</a>
+    <a href="#use-cases">Use Cases</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#quickstart">Quickstart</a>
+    <a href="#numbers">Numbers</a>
+    <a href="/" class="lab-btn">Open Lab &rarr;</a>
+  </div>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="overview">
+  <div id="hero" class="fade-in">
+    <div class="hero-title">
+      <span class="dna">&#129516;</span> <span class="accent">Helix</span> <span style="color:var(--text-dim)">&times;</span> <span class="accent2">Tempo</span>
+    </div>
+    <div class="hero-sub">Self-healing payment infrastructure for AI agents</div>
+    <div class="hero-oneliner">
+      Two lines of code. Every payment failure auto-repairs.<br>
+      Your agent gets smarter with every transaction.
+    </div>
+    <div class="hero-buttons">
+      <a href="#quickstart" class="btn-primary">Developer Quickstart</a>
+      <a href="https://github.com" target="_blank" class="btn-outline">View on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PROBLEM ═══════════ -->
+<section id="problem">
+  <div class="fade-in">
+    <h2>The Problem</h2>
+    <p class="section-sub">AI agents process millions of payments. When one fails, nobody's home to fix it.</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <h3>Silent Failures</h3>
+        <p>Agent gets HTTP 402. Insufficient balance. No fallback. No retry logic. The task dies silently and revenue evaporates.</p>
+      </div>
+      <div class="problem-card">
+        <h3>Currency Blindness</h3>
+        <p>Agent holds EUR stablecoins but the service demands USDC. Manual swap required. Meanwhile the window closes.</p>
+      </div>
+      <div class="problem-card">
+        <h3>Zero Memory</h3>
+        <p>Agent pays for inference 1,000 times but learns nothing. Same balance failure hits every night at 2am. Nobody notices until morning.</p>
+      </div>
+    </div>
+    <div class="stat-line">
+      Traditional payment failure rate: <b>2&ndash;4%</b>. Agent payment failure rate: <b>5&ndash;8%</b>.<br>
+      On <b>$10T/day</b> projected agent volume, that's <b>$500B+ at risk</b>.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ HOW IT WORKS ═══════════ -->
+<section id="how-it-works">
+  <div class="fade-in">
+    <h2>How It Works &mdash; PCEC</h2>
+    <p class="section-sub">Four steps. Sub-second. Fully autonomous.</p>
+    <div class="pcec-flow">
+      <div class="pcec-card">
+        <div class="letter">P</div>
+        <h3>Perceive</h3>
+        <p>Parse MPP 402 error response. Classify failure into one of 10 categories. Assess severity.</p>
+      </div>
+      <div class="pcec-arrow">&rarr;</div>
+      <div class="pcec-card">
+        <div class="letter">C</div>
+        <h3>Construct</h3>
+        <p>Generate 2&ndash;3 repair candidates. Each has estimated cost, speed, and requirements.</p>
+      </div>
+      <div class="pcec-arrow">&rarr;</div>
+      <div class="pcec-card">
+        <div class="letter">E</div>
+        <h3>Evaluate</h3>
+        <p>Score each candidate 0&ndash;100. Pick optimal strategy based on cost, speed, and success history.</p>
+      </div>
+      <div class="pcec-arrow">&rarr;</div>
+      <div class="pcec-card">
+        <div class="letter">K</div>
+        <h3>Commit</h3>
+        <p>Execute the repair. Retry the original payment. Store a Gene Capsule in the Gene Map.</p>
+      </div>
+    </div>
+    <div class="gene-note">
+      <b>Gene Capsules</b> accumulate over time. When the same failure type recurs &rarr; skip C+E &rarr; apply the known fix instantly. <b>That's the network effect.</b>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SCENARIOS ═══════════ -->
+<section id="scenarios">
+  <div class="fade-in">
+    <h2>What Helix Fixes</h2>
+    <p class="section-sub">10 failure scenarios. 10 autonomous repair strategies.</p>
+    <table class="scenario-table">
+      <thead>
+        <tr><th>#</th><th>Failure</th><th>MPP Error</th><th>Helix Repair</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="num">1</td><td class="name">Insufficient Balance</td><td class="err">payment-insufficient</td><td class="fix">Swap alt stablecoin via Tempo DEX</td><td><span class="sc-tag live">LIVE</span></td></tr>
+        <tr><td class="num">2</td><td class="name">Session Expired</td><td class="err">invalid-challenge</td><td class="fix">Auto-renew MPP session</td><td><span class="sc-tag live">LIVE</span></td></tr>
+        <tr><td class="num">3</td><td class="name">Currency Mismatch</td><td class="err">method-unsupported</td><td class="fix">Swap to required asset via DEX</td><td><span class="sc-tag live">LIVE</span></td></tr>
+        <tr><td class="num">4</td><td class="name">Signature Failure</td><td class="err">verification-failed</td><td class="fix">Refresh nonce from Tempo RPC</td><td><span class="sc-tag live">LIVE</span></td></tr>
+        <tr><td class="num">5</td><td class="name">Batch Revert</td><td class="err">tx-reverted</td><td class="fix">Remove failed item, resubmit batch</td><td><span class="sc-tag live">LIVE</span></td></tr>
+        <tr><td class="num">6</td><td class="name">Service Down</td><td class="err">HTTP 500 + receipt</td><td class="fix">Retry with MPP receipt (idempotent)</td><td><span class="sc-tag mock">MOCK</span></td></tr>
+        <tr><td class="num">7</td><td class="name">DEX Slippage</td><td class="err">swap-reverted</td><td class="fix">Split into smaller swaps</td><td><span class="sc-tag mock">MOCK</span></td></tr>
+        <tr><td class="num">8</td><td class="name">Compliance Block</td><td class="err">tip-403</td><td class="fix">Switch to unrestricted stablecoin</td><td><span class="sc-tag mock">MOCK</span></td></tr>
+        <tr><td class="num">9</td><td class="name">Cascade Failure</td><td class="err">cascade-failure</td><td class="fix">Refund waterfall C&rarr;B&rarr;A</td><td><span class="sc-tag vision">VISION</span></td></tr>
+        <tr><td class="num">10</td><td class="name">Off-Ramp Failure</td><td class="err">offramp-failed</td><td class="fix">Switch off-ramp provider</td><td><span class="sc-tag vision">VISION</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ USE CASES ═══════════ -->
+<section id="use-cases">
+  <div class="fade-in">
+    <h2>Use Cases</h2>
+    <p class="section-sub">Anywhere AI agents move money.</p>
+    <div class="usecase-grid">
+      <div class="usecase-card">
+        <h3>Agentic Commerce</h3>
+        <p>AI agents purchasing APIs, data feeds, and compute via MPP. Helix ensures every payment completes, even when balances shift mid-task.</p>
+      </div>
+      <div class="usecase-card">
+        <h3>Cross-Border Payroll</h3>
+        <p>1,000 employees across 5 currencies. Batch payments with auto-recovery on compliance blocks, nonce collisions, and partial reverts.</p>
+      </div>
+      <div class="usecase-card">
+        <h3>Micro-Payments</h3>
+        <p>Pay-per-token LLM inference at sub-cent granularity. Session management with auto-renewal. Never lose a stream mid-generation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ARCHITECTURE ═══════════ -->
+<section id="architecture">
+  <div class="fade-in">
+    <h2>Architecture</h2>
+    <p class="section-sub">One function call between your agent and bulletproof payments.</p>
+    <div class="arch-stack">
+      <div class="arch-layer agent">
+        <h4>Your Agent Code</h4>
+        <p>fetch(), axios, any HTTP client</p>
+      </div>
+      <div class="arch-arrow">&darr; <span style="font-family:var(--mono);font-size:11px;color:var(--amber);margin-left:8px">wrap() &mdash; 2 lines</span></div>
+      <div class="arch-layer helix">
+        <h4>Helix SDK Layer</h4>
+        <p>PCEC Engine + Gene Map + EventBus</p>
+      </div>
+      <div class="arch-arrow">&darr;</div>
+      <div class="arch-layer mpp">
+        <h4>MPP Protocol</h4>
+        <p>HTTP 402 + payment challenges + credentials</p>
+      </div>
+      <div class="arch-arrow">&darr;</div>
+      <div class="arch-layer tempo">
+        <h4>Tempo Blockchain</h4>
+        <p>Payment Lanes + DEX + TIP-20 Stablecoins</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ QUICKSTART ═══════════ -->
+<section id="quickstart">
+  <div class="fade-in">
+    <h2>Developer Quickstart</h2>
+    <p class="section-sub">From zero to self-healing in under a minute.</p>
+
+    <div class="step-block">
+      <div class="step-num">STEP 1</div>
+      <h3>Install</h3>
+      <pre><span class="cmd">npm install</span> @helix/tempo</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">STEP 2</div>
+      <h3>Initialize</h3>
+      <pre><span class="cmd">npx helix init</span>
+<span class="comment"># → walks you through: wallet, stablecoins, budget, retries</span>
+<span class="comment"># → writes helix.config.json</span></pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">STEP 3</div>
+      <h3>Wrap your agent</h3>
+      <pre><span class="keyword">import</span> { <span class="fn">wrap</span> } <span class="keyword">from</span> <span class="string">'@helix/tempo'</span>;
+
+<span class="keyword">const</span> myAgent = <span class="keyword">async</span> (input<span class="type">: string</span>) => {
+  <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="fn">fetch</span>(<span class="string">'https://api.example.com/v1/data'</span>);
+  <span class="keyword">return</span> res.<span class="fn">json</span>();
+};
+
+<span class="comment">// That's it. Same input, same output. Self-healing is transparent.</span>
+<span class="keyword">const</span> resilientAgent = <span class="fn">wrap</span>(myAgent);</pre>
+    </div>
+
+    <div class="step-block">
+      <div class="step-num">STEP 4</div>
+      <h3>Monitor</h3>
+      <pre><span class="cmd">npx helix status</span>   <span class="comment"># Terminal: live repair logs</span>
+<span class="cmd">npx helix dash</span>     <span class="comment"># Browser: Minecraft lab at localhost:3710</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ COMPETITIVE ═══════════ -->
+<section id="competitive">
+  <div class="fade-in">
+    <h2>Competitive Landscape</h2>
+    <p class="section-sub">Helix is purpose-built for the agent payment era.</p>
+    <table class="comp-table">
+      <thead>
+        <tr><th>Capability</th><th>Raw MPP</th><th>x402</th><th>Stripe Retries</th><th>Helix</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cap">Agent payments (HTTP 402)</td><td class="check">&check;</td><td class="check">&check;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Self-repair on failure</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Cross-currency swap</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Learning from failures</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Network effect (Gene Map)</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Multi-stablecoin</td><td class="check">&check;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+        <tr><td class="cap">Batch recovery</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="cross">&times;</td><td class="check">&check;</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ NUMBERS ═══════════ -->
+<section id="numbers">
+  <div class="fade-in">
+    <h2>The Numbers</h2>
+    <p class="section-sub">The market for agent payment infrastructure is just beginning.</p>
+    <div class="numbers-grid">
+      <div class="num-card">
+        <div class="big">$1.8T/day</div>
+        <p>Processed by Visa/Mastercard today. Agent commerce will dwarf this within a decade.</p>
+      </div>
+      <div class="num-card">
+        <div class="big">$3&ndash;5T</div>
+        <p>Projected agent commerce by 2030 (World Economic Forum / Sam Altman estimates).</p>
+      </div>
+      <div class="num-card">
+        <div class="big">5&ndash;8%</div>
+        <p>Agent payment failure rate. On $10T/day volume, that's $500B+ at risk annually.</p>
+      </div>
+      <div class="num-card">
+        <div class="big">0.1%</div>
+        <p>Helix charges on recovered value. Gene Map network effect: more agents = more resilient = more agents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div style="color:var(--text-dim)">
+    <span style="color:var(--amber);font-weight:700">Helix</span> <span style="color:var(--text-dim)">&times;</span> <span style="color:var(--teal);font-weight:700">Tempo</span>
+    &nbsp;&middot;&nbsp; Built for the Tempo &times; Stripe HIIT Hackathon &nbsp;&middot;&nbsp; March 2026
+  </div>
+  <div class="links">
+    <a href="https://github.com" target="_blank">GitHub</a>
+    <a href="/">Dashboard</a>
+    <a href="/docs">Documentation</a>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
