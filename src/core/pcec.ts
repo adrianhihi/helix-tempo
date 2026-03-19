@@ -24,6 +24,7 @@ const CODE_TO_CATEGORY: Record<string, FailureCategory> = {
   'tip-403': 'compliance',
   'cascade-failure': 'cascade',
   'offramp-failed': 'offramp',
+  'token-uninitialized': 'network',
 };
 
 const CATEGORY_SEVERITY: Record<FailureCategory, Severity> = {
@@ -37,6 +38,7 @@ const CATEGORY_SEVERITY: Record<FailureCategory, Severity> = {
   compliance: 'critical',
   cascade: 'critical',
   offramp: 'high',
+  network: 'high',
 };
 
 // ── Revenue estimates per category ──────────────────────────────────
@@ -52,6 +54,7 @@ const REVENUE_AT_RISK: Record<FailureCategory, number> = {
   compliance: 250,
   cascade: 1000,
   offramp: 400,
+  network: 100,
 };
 
 // ── Perceive ────────────────────────────────────────────────────────
@@ -73,7 +76,10 @@ export function perceive(error: unknown, _context?: RepairContext): FailureClass
     } else {
       // Try to infer from message
       const msg = error.message.toLowerCase();
-      if (msg.includes('429') || msg.includes('rate limit') || msg.includes('too many requests')) {
+      if (msg.includes('uninitialized') || msg.includes('token error') || msg.includes('contract not deployed') || msg.includes('chain mismatch')) {
+        code = 'token-uninitialized';
+        category = 'network';
+      } else if (msg.includes('429') || msg.includes('rate limit') || msg.includes('too many requests')) {
         code = 'payment-required';
         category = 'service';
       } else if (msg.includes('timeout') || msg.includes('timed out') || msg.includes('exceeded') && msg.includes('ms')) {
@@ -427,6 +433,38 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedCostUsd: 0,
       estimatedSpeedMs: 500,
       requirements: [],
+      score: 0,
+      successProbability: 0.5,
+    },
+  ],
+  network: [
+    {
+      id: 'switch_network',
+      strategy: 'switch_network',
+      description: 'Switch RPC endpoint to correct network (mainnet vs testnet)',
+      estimatedCostUsd: 0,
+      estimatedSpeedMs: 200,
+      requirements: [],
+      score: 0,
+      successProbability: 0.5,
+    },
+    {
+      id: 'bridge_tokens',
+      strategy: 'bridge_tokens',
+      description: 'Bridge assets from current chain to target chain',
+      estimatedCostUsd: 0.50,
+      estimatedSpeedMs: 5000,
+      requirements: ['bridge_available'],
+      score: 0,
+      successProbability: 0.5,
+    },
+    {
+      id: 'switch_service',
+      strategy: 'switch_service',
+      description: 'Fall back to a service on the same network agent is on',
+      estimatedCostUsd: 0,
+      estimatedSpeedMs: 100,
+      requirements: ['alt_service'],
       score: 0,
       successProbability: 0.5,
     },

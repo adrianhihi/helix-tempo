@@ -12,7 +12,8 @@ export type MppErrorCode =
   | 'swap-reverted'
   | 'tip-403'
   | 'cascade-failure'
-  | 'offramp-failed';
+  | 'offramp-failed'
+  | 'token-uninitialized';
 
 export type FailureCategory =
   | 'balance'
@@ -24,7 +25,8 @@ export type FailureCategory =
   | 'dex'
   | 'compliance'
   | 'cascade'
-  | 'offramp';
+  | 'offramp'
+  | 'network';
 
 export type Severity = 'low' | 'medium' | 'high' | 'critical';
 

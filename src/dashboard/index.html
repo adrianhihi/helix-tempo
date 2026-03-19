@@ -291,6 +291,7 @@
     <button class="btn" onclick="inject(9)">10 Off-Ramp <span class="tag tag-vision">VISION</span></button>
     <button class="btn" onclick="inject(10)">11 Token Pause <span class="tag tag-mock">MOCK</span></button>
     <button class="btn" onclick="inject(11)">12 Sponsor Empty <span class="tag tag-mock">MOCK</span></button>
+    <button class="btn" onclick="inject(12)">13 Network Mismatch <span class="tag" style="background:#dc2626;color:#fff">REAL</span></button>
     <button class="btn cam-btn" onclick="camRotate(-1)">&#8634;</button>
     <button class="btn cam-btn" onclick="camRotate(1)">&#8635;</button>
   </div>
@@ -413,7 +414,7 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════
-// SCENARIO DATA — full detail for all 12 scenarios
+// SCENARIO DATA — full detail for all 13 scenarios
 // ══════════════════════════════════════════════════════════════
 const SCENARIOS = [
   {
@@ -581,6 +582,20 @@ const SCENARIOS = [
     commitAction:'Switch to self-pay gas mode. Retry original transaction.',
     gene:{type:'sponsor_exhausted', fix:'fallback_self_pay'},
     savedAmount:200, balChange:{}
+  },
+  {
+    id:13, name:'Network Mismatch (REAL)', desc:'Token contract uninitialized on target network',
+    tag:'real', mppError:'token-uninitialized', category:'network',
+    perceive:'TIP20 token error: Uninitialized(Uninitialized). Agent on testnet, service on mainnet.',
+    candidates:[
+      {name:'Switch to mainnet RPC', cost:'$0', speed:'~0.2s', score:94, winner:true, successProbability:0.5, desc:'Reconnect RPC endpoint to tempo-mainnet'},
+      {name:'Bridge testnet→mainnet', cost:'$0.50', speed:'~5s', score:52, successProbability:0.5, desc:'Bridge assets from testnet to mainnet via Tempo bridge'},
+      {name:'Use testnet-compatible service', cost:'$0', speed:'~0.1s', score:68, successProbability:0.5, desc:'Fall back to a service available on testnet'},
+    ],
+    evalReason:'Network switch is free and instant. No bridging needed if agent has mainnet credentials.',
+    commitAction:'Switched RPC endpoint to tempo-mainnet. Retry payment with mainnet token contract.',
+    gene:{type:'network_mismatch', fix:'switch_network'},
+    savedAmount:100, balChange:{}
   }
 ];
 
@@ -912,9 +927,9 @@ function camRotate(dir){camDir=(camDir+dir+4)%4;}
 // ══════════════════════════════════════════════════════════════
 // Injection — triggers BOTH canvas animation AND detail panel
 // ══════════════════════════════════════════════════════════════
-const SCENARIO_NAMES = ['payment-insufficient','invalid-challenge','method-unsupported','verification-failed','tx-reverted','service-500','swap-reverted','tip-403','cascade-failure','offramp-failed','token-paused','sponsor-insufficient'];
-const SCENARIO_CATS = ['balance','session','currency','signature','batch','service','dex','compliance','cascade','offramp','compliance','balance'];
-const SCENARIO_STRATS = ['swap_currency','renew_session','swap_direct','refresh_nonce','remove_and_resubmit','retry_with_receipt','split_swap','switch_stablecoin','refund_waterfall','switch_offramp','switch_stablecoin','fallback_self_pay'];
+const SCENARIO_NAMES = ['payment-insufficient','invalid-challenge','method-unsupported','verification-failed','tx-reverted','service-500','swap-reverted','tip-403','cascade-failure','offramp-failed','token-paused','sponsor-insufficient','token-uninitialized'];
+const SCENARIO_CATS = ['balance','session','currency','signature','batch','service','dex','compliance','cascade','offramp','compliance','balance','network'];
+const SCENARIO_STRATS = ['swap_currency','renew_session','swap_direct','refresh_nonce','remove_and_resubmit','retry_with_receipt','split_swap','switch_stablecoin','refund_waterfall','switch_offramp','switch_stablecoin','fallback_self_pay','switch_network'];
 
 function inject(idx) {
   const workerIdx = idx % workers.length;

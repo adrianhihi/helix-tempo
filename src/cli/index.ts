@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { createReadStream, existsSync, readFileSync, writeFileSync } from 'fs';
 import * as readline from 'readline';
 import { bus } from '../core/bus.js';
@@ -62,7 +63,7 @@ async function initWizard() {
   console.log(`${C.dim}Next steps:${C.reset}`);
   console.log(`  1. ${C.white}import { wrap } from '@helix/tempo'${C.reset}`);
   console.log(`  2. ${C.white}const safePay = wrap(myAgent.pay)${C.reset}`);
-  console.log(`  3. ${C.white}npm run demo${C.reset}   — see all 12 failure scenarios`);
+  console.log(`  3. ${C.white}npm run demo${C.reset}   — see all 13 failure scenarios`);
   console.log(`  4. ${C.white}npm run dash${C.reset}   — open the Minecraft isometric lab\n`);
 }
 
@@ -226,11 +227,50 @@ async function dash() {
     res.json({ genes, count });
   });
 
+  // Run demo scenarios API — triggers PCEC events within this process so SSE works
+  app.get('/api/helix/run-demo', async (_req, res) => {
+    const { PcecEngine } = await import('../core/pcec.js');
+    const demoGeneMap = new GeneMap(':memory:');
+    const engine = new PcecEngine(demoGeneMap, 'demo-agent');
+
+    const errors = [
+      { code: 'payment-insufficient', msg: 'Payment of 500 USDC failed: insufficient balance (have 12.50 USDC)' },
+      { code: 'invalid-challenge', msg: 'MPP session sess_7x2k expired at 2026-03-18T10:00:00Z' },
+      { code: 'method-unsupported', msg: 'Service requires EURC payment, agent holds USDC' },
+      { code: 'verification-failed', msg: 'Transaction signature invalid: nonce mismatch (expected 42, got 41)' },
+      { code: 'tx-reverted', msg: 'Batch tx reverted: item 3/5 failed (recipient 0xdead not found)' },
+      { code: 'payment-required', msg: 'HTTP 500 from api.service.com after payment — receipt txn_abc123 is valid' },
+      { code: 'swap-reverted', msg: 'Swap reverted: slippage exceeded 1% (actual 3.2%) on USDC→EURC pool' },
+      { code: 'tip-403', msg: 'TIP-403: USDT transfer blocked by compliance policy for jurisdiction EU-RESTRICTED' },
+      { code: 'cascade-failure', msg: 'Agent chain A→B→C: agent C payment failed, waterfall refund needed' },
+      { code: 'offramp-failed', msg: 'Bank transfer to IBAN DE89... failed: provider Moonpay returned error 503' },
+    ];
+
+    res.json({ status: 'running', scenarios: errors.length });
+
+    // Run scenarios sequentially in background
+    for (const e of errors) {
+      const err = new Error(e.msg);
+      (err as unknown as Record<string, unknown>).code = e.code;
+      await engine.repair(err);
+      await new Promise(r => setTimeout(r, 300));
+    }
+    // Re-run first 3 for immunity
+    for (const e of errors.slice(0, 3)) {
+      const err = new Error(e.msg);
+      (err as unknown as Record<string, unknown>).code = e.code;
+      await engine.repair(err);
+      await new Promise(r => setTimeout(r, 200));
+    }
+    demoGeneMap.close();
+  });
+
   app.listen(port, () => {
     console.log(`\n${C.bold}${C.cyan}  HELIX-TEMPO${C.reset} Dashboard\n`);
     console.log(`  ${C.green}●${C.reset} Running at ${C.bold}http://localhost:${port}${C.reset}`);
     console.log(`  ${C.dim}SSE stream: http://localhost:${port}/api/helix/stream${C.reset}`);
-    console.log(`  ${C.dim}Gene API:   http://localhost:${port}/api/helix/genes${C.reset}\n`);
+    console.log(`  ${C.dim}Gene API:   http://localhost:${port}/api/helix/genes${C.reset}`);
+    console.log(`  ${C.dim}Run demo:   http://localhost:${port}/api/helix/run-demo${C.reset}\n`);
     console.log(`  ${C.dim}Press Ctrl+C to stop${C.reset}\n`);
   });
 }

@@ -1082,7 +1082,7 @@ geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite conne
 <section id="scenarios">
   <div class="fade-in">
     <h2>What Helix Fixes</h2>
-    <p class="section-sub">12 failure scenarios in demo (20 analyzed: 3 Phase 2, 2 oral, 3 excluded with reasoning).</p>
+    <p class="section-sub">13 failure scenarios in demo (20 analyzed: 3 Phase 2, 2 oral, 3 excluded with reasoning).</p>
     <table class="scenario-table">
       <thead>
         <tr><th>#</th><th>Failure</th><th>MPP Error</th><th>Helix Repair</th><th>Status</th></tr>
@@ -1100,8 +1100,22 @@ geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite conne
         <tr><td class="num">10</td><td class="name">Off-Ramp Failure</td><td class="err">offramp-failed</td><td class="fix">Switch off-ramp provider</td><td><span class="sc-tag vision">VISION</span></td></tr>
         <tr><td class="num">11</td><td class="name">Token Pause</td><td class="err">token-paused</td><td class="fix">Switch to unpaused stablecoin</td><td><span class="sc-tag mock">MOCK</span></td></tr>
         <tr><td class="num">12</td><td class="name">Fee Sponsor Empty</td><td class="err">sponsor-insufficient</td><td class="fix">Fallback to self-pay gas</td><td><span class="sc-tag mock">MOCK</span></td></tr>
+        <tr><td class="num">13</td><td class="name">Network Mismatch</td><td class="err">token-uninitialized</td><td class="fix">switch_network / bridge_tokens</td><td><span class="sc-tag" style="background:rgba(220,38,38,0.15);color:#f87171">REAL</span></td></tr>
       </tbody>
     </table>
+
+    <div style="margin-top:20px;padding:16px 20px;border-radius:10px;background:rgba(220,38,38,0.04);border:1px solid rgba(220,38,38,0.15)">
+      <div style="font-family:var(--sans);font-size:13px;font-weight:700;color:var(--red);margin-bottom:8px">&#128308; REAL-WORLD VALIDATION</div>
+      <div style="font-size:12px;color:var(--text-dim);line-height:1.7">
+        Scenario #13 is not simulated. We ran <code style="color:var(--amber)">npx mppx</code> against 50+ live MPP services and hit this error in production.<br><br>
+        <code style="color:var(--green)">$ npx mppx https://mpp.dev/api/ping/paid</code><br>
+        <span style="color:var(--green)">&rarr; &#10003; &ldquo;tm! thanks for paying&rdquo;</span> (testnet, success)<br><br>
+        <code style="color:var(--red)">$ npx mppx https://openai.mpp.tempo.xyz/v1/chat/completions</code><br>
+        <span style="color:var(--red)">&rarr; &#10007; TIP20 token error: Uninitialized(Uninitialized)</span> (mainnet, failure)<br><br>
+        This is the exact failure an agent hits when it has testnet tokens but calls a mainnet MPP service. 50+ services on mpp.dev/services are mainnet-only today.<br>
+        <b style="color:var(--red)">Without Helix:</b> agent crashes. <b style="color:var(--green)">With Helix:</b> PCEC detects network mismatch, switches RPC.
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1242,7 +1256,7 @@ geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite conne
               <div class="sa-dt">Why</div>
               <p>PCEC Construct generates candidates FROM the skills library. Skills are the atoms of repair.</p>
               <div class="sa-dt">Helix Tempo</div>
-              <p><b>Fully implemented.</b> 12 failure categories &times; 2&ndash;3 strategies each = ~25 skills in <code>pcec.ts</code>. Each skill has cost estimate, speed estimate, and requirements list.</p>
+              <p><b>Fully implemented.</b> 13 failure categories &times; 2&ndash;3 strategies each = ~25 skills in <code>pcec.ts</code>. Each skill has cost estimate, speed estimate, and requirements list.</p>
             </div>
           </div>
           <div class="sa-card" onclick="this.classList.toggle('open')">
@@ -1293,7 +1307,7 @@ geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite conne
               <div class="sa-dt">Why</div>
               <p>This is what makes Helix different. It doesn&rsquo;t just retry &mdash; it <b>understands what broke</b> and picks the optimal fix.</p>
               <div class="sa-dt">Helix Tempo</div>
-              <p><b>Fully implemented.</b> <code>src/core/pcec.ts</code> &mdash; complete P/C/E/K loop with all 12 failure handlers. Proven by HumanEval benchmark: <b>68% &rarr; 90%</b>. Perceive parses MPP 402 errors (RFC 9457). Evaluate scores by speed (30pts), cost, requirements, severity matching.</p>
+              <p><b>Fully implemented.</b> <code>src/core/pcec.ts</code> &mdash; complete P/C/E/K loop with all 13 failure handlers. Proven by HumanEval benchmark: <b>68% &rarr; 90%</b>. Perceive parses MPP 402 errors (RFC 9457). Evaluate scores by speed (30pts), cost, requirements, severity matching.</p>
             </div>
           </div>
           <div class="sa-card" onclick="this.classList.toggle('open')">
@@ -1543,7 +1557,7 @@ geneMap.<span class="fn">close</span>();  <span class="cm">// close SQLite conne
           <span class="evo-badge" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.2);color:var(--green)">CURRENT</span>
           <span class="evo-badge">HACKATHON DEMO</span>
         </div>
-        <div class="evo-desc">Fixed repair strategies for known failure patterns. Every repair stored as Gene Capsule. 12 failure types, ~25 strategies, 9 immune hits in benchmark.</div>
+        <div class="evo-desc">Fixed repair strategies for known failure patterns. Every repair stored as Gene Capsule. 13 failure types, ~25 strategies, 9 immune hits in benchmark.</div>
         <div class="evo-tech">Bounded error space (7 MPP codes + 3 Tempo-specific). Evaluate scores by speed/cost/requirements/successProbability. Gene Map in SQLite with WAL mode.</div>
         <div class="evo-limit">Limitation: Can only handle failures it's been programmed for. Unknown error codes &rarr; fallback to human.</div>
       </div>

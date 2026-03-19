@@ -166,6 +166,10 @@ const SCENARIOS = [
     name: '12. Fee Sponsor Exhausted',
     error: makeError('payment-insufficient', 'Fee sponsor account balance exhausted (0 USDC). Cannot pay gas on behalf of agent'),
   },
+  {
+    name: '13. Network Mismatch (REAL MPP ERROR)',
+    error: makeError('token-uninitialized', 'Error (REQUEST_FAILED): Request failed: Execution reverted with reason: TIP20 token error: Uninitialized(Uninitialized). Details: execution reverted: TIP20 token error: Uninitialized(Uninitialized) Version: viem@2.47.5'),
+  },
 ];
 
 // ── Main ────────────────────────────────────────────────────────────
@@ -176,14 +180,17 @@ async function main() {
   console.log(`${C.bold}${C.cyan}║${C.reset}  ${C.dim}PCEC Engine × Gene Map × Tempo Blockchain${C.reset}                   ${C.bold}${C.cyan}║${C.reset}`);
   console.log(`${C.bold}${C.cyan}╚══════════════════════════════════════════════════════════════╝${C.reset}\n`);
 
-  const geneMap = new GeneMap(':memory:');
+  // Delete old Gene Map so each run starts fresh
+  const { unlinkSync } = await import('fs');
+  try { unlinkSync('./helix-genes.db'); } catch {}
+  const geneMap = new GeneMap('./helix-genes.db');
   const engine = new PcecEngine(geneMap, 'demo-agent');
 
   // Subscribe to events for terminal output
   const unsub = bus.subscribe(renderEvent);
 
   // ── Phase 1: Run all 12 scenarios ──
-  console.log(`${C.bold}${C.yellow}━━━ Phase 1: First Encounter (12 Failure Scenarios) ━━━${C.reset}\n`);
+  console.log(`${C.bold}${C.yellow}━━━ Phase 1: First Encounter (13 Failure Scenarios) ━━━${C.reset}\n`);
 
   for (const scenario of SCENARIOS) {
     console.log(`\n${C.bold}${C.white}▸ ${scenario.name}${C.reset}`);
