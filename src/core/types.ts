@@ -37,6 +37,8 @@ export interface FailureClassification {
   details: string;
   rawError: unknown;
   timestamp: number;
+  actualBalance?: number;
+  requiredAmount?: number;
 }
 
 export interface RepairCandidate {
@@ -47,6 +49,7 @@ export interface RepairCandidate {
   estimatedSpeedMs: number;
   requirements: string[];
   score: number;
+  successProbability: number; // 0-1, based on Gene Map history, default 0.5
 }
 
 export interface GeneCapsule {

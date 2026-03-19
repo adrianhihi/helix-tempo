@@ -157,8 +157,13 @@
   .cand-card.winner { border-color: var(--green); opacity: 1; box-shadow: 0 0 12px rgba(74,222,128,0.08); }
   .cand-name { font-size: 11px; font-weight: 600; color: #ddd; margin-bottom: 4px; }
   .cand-desc { font-size: 9px; color: var(--text-dim); margin-bottom: 6px; }
-  .cand-meta { display: flex; gap: 10px; font-size: 9px; color: var(--text-dim); }
-  .cand-meta span b { color: var(--text); }
+  .cand-meta { display: flex; gap: 10px; font-size: 9px; color: var(--text-dim); flex-wrap: wrap; }
+  .cand-meta span b { color: var(--text); font-weight: 600; }
+  .gene-hit-indicator {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--green);
+    margin-right: 3px; vertical-align: middle;
+  }
   .score-bar-wrap { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 6px; overflow: hidden; }
   .score-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; background: var(--amber); }
   .cand-card.winner .score-bar-fill { background: var(--green); }
@@ -283,6 +288,8 @@
     <button class="btn" onclick="inject(7)">8 Compliance <span class="tag tag-mock">MOCK</span></button>
     <button class="btn" onclick="inject(8)">9 Cascade <span class="tag tag-vision">VISION</span></button>
     <button class="btn" onclick="inject(9)">10 Off-Ramp <span class="tag tag-vision">VISION</span></button>
+    <button class="btn" onclick="inject(10)">11 Token Pause <span class="tag tag-mock">MOCK</span></button>
+    <button class="btn" onclick="inject(11)">12 Sponsor Empty <span class="tag tag-mock">MOCK</span></button>
     <button class="btn cam-btn" onclick="camRotate(-1)">&#8634;</button>
     <button class="btn cam-btn" onclick="camRotate(1)">&#8635;</button>
   </div>
@@ -296,6 +303,7 @@
     <span class="stat">Revenue: <b id="s-rev">$0</b></span>
     <span class="stat">Capsules: <b id="s-gene">0</b></span>
     <span class="stat">Immune: <b id="s-immune">0</b></span>
+    <span class="stat" id="pcec-safety">PCEC: <b style="color:var(--green)">SAFE</b></span>
   </div>
   <div id="event-log">Ready. Click an inject button to trigger a failure scenario.</div>
 </div>
@@ -404,17 +412,18 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════
-// SCENARIO DATA — full detail for all 10 scenarios
+// SCENARIO DATA — full detail for all 12 scenarios
 // ══════════════════════════════════════════════════════════════
 const SCENARIOS = [
   {
     id:1, name:'Insufficient Balance', desc:'USDC balance too low for payment',
     tag:'live', mppError:'payment-insufficient', category:'balance',
     perceive:'402 → payment-insufficient. Need $0.05 USDC, wallet has $0.02.',
+    actualBalance: 0.02, requiredAmount: 0.05,
     candidates:[
-      {name:'Swap EURC→USDC via DEX', cost:'$0.001 fee', speed:'~0.5s', score:96, winner:true, desc:'Use Tempo DEX to swap available EURC to USDC at market rate'},
-      {name:'Top-up from reserve wallet', cost:'$0 fee', speed:'~2s', score:72, desc:'Transfer from backup hot wallet on Tempo L1'},
-      {name:'Reduce request to $0.02', cost:'$0', speed:'instant', score:41, desc:'Partial payment with available balance'},
+      {name:'Swap EURC→USDC via DEX', cost:'$0.001 fee', speed:'~0.5s', score:96, winner:true, successProbability:0.5, desc:'Use Tempo DEX to swap available EURC to USDC at market rate'},
+      {name:'Top-up from reserve wallet', cost:'$0 fee', speed:'~2s', score:72, successProbability:0.5, desc:'Transfer from backup hot wallet on Tempo L1'},
+      {name:'Reduce request to $0.02', cost:'$0', speed:'instant', score:41, successProbability:0.5, desc:'Partial payment with available balance'},
     ],
     evalReason:'Swap is cheapest + fastest. EURC→USDC direct pool has $2M liquidity.',
     commitAction:'Swap 0.03 EURC → 0.03 USDC via Tempo DEX. Retry payment.',
@@ -426,8 +435,8 @@ const SCENARIOS = [
     tag:'live', mppError:'invalid-challenge', category:'session',
     perceive:'402 → invalid-challenge. Session sess_7x2k expired at T+30min.',
     candidates:[
-      {name:'Auto-renew MPP session', cost:'$0', speed:'~0.3s', score:92, winner:true, desc:'Request fresh challenge from service, re-authenticate'},
-      {name:'Switch to one-time charge', cost:'$0.05 fee', speed:'~0.5s', score:61, desc:'Abandon session, pay via single charge'},
+      {name:'Auto-renew MPP session', cost:'$0', speed:'~0.3s', score:92, winner:true, successProbability:0.5, desc:'Request fresh challenge from service, re-authenticate'},
+      {name:'Switch to one-time charge', cost:'$0.05 fee', speed:'~0.5s', score:61, successProbability:0.5, desc:'Abandon session, pay via single charge'},
     ],
     evalReason:'Session renewal is free and fastest. Service supports re-auth.',
     commitAction:'POST /mpp/session/renew → new sess_9k3m. Retry with fresh credential.',
@@ -438,10 +447,11 @@ const SCENARIOS = [
     id:3, name:'Currency Mismatch', desc:'Service requires EURC but agent holds USDC',
     tag:'live', mppError:'method-unsupported', category:'currency',
     perceive:'402 → method-unsupported. Service requires EURC, agent offered USDC.',
+    actualBalance: null, requiredAmount: 0.05, availableToken: 'USDC', requiredToken: 'EURC',
     candidates:[
-      {name:'Direct swap USDC→EURC', cost:'$0.001 fee', speed:'~0.6s', score:94, winner:true, desc:'Swap via Tempo DEX USDC/EURC pool'},
-      {name:'Multi-hop USDC→USDT→EURC', cost:'$0.003 fee', speed:'~1.5s', score:58, desc:'Route through USDT as intermediate'},
-      {name:'Switch to EURC-accepting service', cost:'$0', speed:'~0.2s', score:45, desc:'Use alt provider that accepts USDC'},
+      {name:'Direct swap USDC→EURC', cost:'$0.001 fee', speed:'~0.6s', score:94, winner:true, successProbability:0.5, desc:'Swap via Tempo DEX USDC/EURC pool'},
+      {name:'Multi-hop USDC→USDT→EURC', cost:'$0.003 fee', speed:'~1.5s', score:58, successProbability:0.5, desc:'Route through USDT as intermediate'},
+      {name:'Switch to EURC-accepting service', cost:'$0', speed:'~0.2s', score:45, successProbability:0.5, desc:'Use alt provider that accepts USDC'},
     ],
     evalReason:'Direct swap has deepest liquidity and lowest slippage at this size.',
     commitAction:'Swap 0.05 USDC → 0.05 EURC via Tempo DEX. Retry payment.',
@@ -453,8 +463,8 @@ const SCENARIOS = [
     tag:'live', mppError:'verification-failed', category:'signature',
     perceive:'402 → verification-failed. Nonce mismatch: expected 42, got 41.',
     candidates:[
-      {name:'Refresh nonce from RPC', cost:'$0', speed:'~0.4s', score:89, winner:true, desc:'Query Tempo RPC for current nonce, re-sign transaction'},
-      {name:'Re-derive signing key', cost:'$0', speed:'~0.6s', score:64, desc:'Regenerate keypair from HD wallet path'},
+      {name:'Refresh nonce from RPC', cost:'$0', speed:'~0.4s', score:89, winner:true, successProbability:0.5, desc:'Query Tempo RPC for current nonce, re-sign transaction'},
+      {name:'Re-derive signing key', cost:'$0', speed:'~0.6s', score:64, successProbability:0.5, desc:'Regenerate keypair from HD wallet path'},
     ],
     evalReason:'Nonce refresh is simpler and faster. Key derivation only needed if key is corrupted.',
     commitAction:'GET /rpc/nonce → 42. Re-sign with correct nonce. Retry.',
@@ -466,9 +476,9 @@ const SCENARIOS = [
     tag:'live', mppError:'tx-reverted', category:'batch',
     perceive:'402 → tx-reverted. Batch item 3/5 failed: recipient 0xdead not found.',
     candidates:[
-      {name:'Remove failed item, resubmit', cost:'$0.01 gas', speed:'~0.5s', score:88, winner:true, desc:'Strip item 3, resubmit batch with 4 valid items'},
-      {name:'Fix address and retry all', cost:'$0.02 gas', speed:'~1s', score:65, desc:'Resolve address, retry full batch'},
-      {name:'Split into individual txns', cost:'$0.05 gas', speed:'~2s', score:38, desc:'Send each item as separate transaction'},
+      {name:'Remove failed item, resubmit', cost:'$0.01 gas', speed:'~0.5s', score:88, winner:true, successProbability:0.5, desc:'Strip item 3, resubmit batch with 4 valid items'},
+      {name:'Fix address and retry all', cost:'$0.02 gas', speed:'~1s', score:65, successProbability:0.5, desc:'Resolve address, retry full batch'},
+      {name:'Split into individual txns', cost:'$0.05 gas', speed:'~2s', score:38, successProbability:0.5, desc:'Send each item as separate transaction'},
     ],
     evalReason:'Removing failed item is cheapest. 4/5 items proceed without delay.',
     commitAction:'Remove item 3 (0xdead). Resubmit batch [1,2,4,5]. Success.',
@@ -480,9 +490,9 @@ const SCENARIOS = [
     tag:'mock', mppError:'HTTP 500', category:'service',
     perceive:'500 from api.service.com AFTER payment. Receipt txn_abc123 is valid on-chain.',
     candidates:[
-      {name:'Retry with receipt (idempotent)', cost:'$0', speed:'~0.2s', score:97, winner:true, desc:'Re-send request with payment receipt as proof'},
-      {name:'Switch to backup provider', cost:'$0.01', speed:'~0.8s', score:62, desc:'Route to secondary API endpoint'},
-      {name:'Request refund', cost:'$0', speed:'~3s', score:44, desc:'Initiate on-chain refund for failed delivery'},
+      {name:'Retry with receipt (idempotent)', cost:'$0', speed:'~0.2s', score:97, winner:true, successProbability:0.5, desc:'Re-send request with payment receipt as proof'},
+      {name:'Switch to backup provider', cost:'$0.01', speed:'~0.8s', score:62, successProbability:0.5, desc:'Route to secondary API endpoint'},
+      {name:'Request refund', cost:'$0', speed:'~3s', score:44, successProbability:0.5, desc:'Initiate on-chain refund for failed delivery'},
     ],
     evalReason:'Receipt retry is free + near-instant. MPP receipts are idempotent by design.',
     commitAction:'Retry POST /api/data with header X-Payment-Receipt: txn_abc123. 200 OK.',
@@ -494,9 +504,9 @@ const SCENARIOS = [
     tag:'mock', mppError:'swap-reverted', category:'dex',
     perceive:'swap-reverted. Slippage exceeded 1% (actual 3.2%) on USDC→EURC pool.',
     candidates:[
-      {name:'Split into smaller swaps', cost:'$0.003 fee', speed:'~1.2s', score:85, winner:true, desc:'Split $5 swap into 3x $1.67 to reduce per-swap impact'},
-      {name:'Route through deeper pool', cost:'$0.005 fee', speed:'~1.8s', score:62, desc:'Use USDC→USDT→EURC path with more liquidity'},
-      {name:'Wait and retry', cost:'$0', speed:'~5s', score:48, desc:'Wait for pool to stabilize, retry with same params'},
+      {name:'Split into smaller swaps', cost:'$0.003 fee', speed:'~1.2s', score:85, winner:true, successProbability:0.5, desc:'Split $5 swap into 3x $1.67 to reduce per-swap impact'},
+      {name:'Route through deeper pool', cost:'$0.005 fee', speed:'~1.8s', score:62, successProbability:0.5, desc:'Use USDC→USDT→EURC path with more liquidity'},
+      {name:'Wait and retry', cost:'$0', speed:'~5s', score:48, successProbability:0.5, desc:'Wait for pool to stabilize, retry with same params'},
     ],
     evalReason:'Splitting minimizes slippage per trade. 3 small swaps all under 0.5% slippage.',
     commitAction:'Split: 3x swap 1.67 USDC → EURC. All succeeded. Total slippage: 0.4%.',
@@ -508,8 +518,8 @@ const SCENARIOS = [
     tag:'mock', mppError:'tip-403', category:'compliance',
     perceive:'TIP-403: USDT blocked by compliance policy for EU-RESTRICTED jurisdiction.',
     candidates:[
-      {name:'Switch to DAI (unrestricted)', cost:'$0.001 swap', speed:'~0.7s', score:91, winner:true, desc:'Swap USDT→DAI which has no geo-restrictions'},
-      {name:'Route via compliant wallet', cost:'$0.05', speed:'~2s', score:52, desc:'Send through KYC-verified intermediary wallet'},
+      {name:'Switch to DAI (unrestricted)', cost:'$0.001 swap', speed:'~0.7s', score:91, winner:true, successProbability:0.5, desc:'Swap USDT→DAI which has no geo-restrictions'},
+      {name:'Route via compliant wallet', cost:'$0.05', speed:'~2s', score:52, successProbability:0.5, desc:'Send through KYC-verified intermediary wallet'},
     ],
     evalReason:'DAI has no compliance restrictions in any jurisdiction. Cheapest path.',
     commitAction:'Swap 1.50 USDT → 1.50 DAI via DEX. Retry payment with DAI. Accepted.',
@@ -521,8 +531,8 @@ const SCENARIOS = [
     tag:'vision', mppError:'cascade-failure', category:'cascade',
     perceive:'Agent C payment failed in chain A→B→C. Waterfall refund needed.',
     candidates:[
-      {name:'Refund waterfall C→B→A', cost:'$0.02 gas', speed:'~3s', score:82, winner:true, desc:'Initiate sequential refund from C back through B to A'},
-      {name:'Reroute via alt agent D', cost:'$0.10', speed:'~5s', score:48, desc:'Replace C with backup agent D, replay from B'},
+      {name:'Refund waterfall C→B→A', cost:'$0.02 gas', speed:'~3s', score:82, winner:true, successProbability:0.5, desc:'Initiate sequential refund from C back through B to A'},
+      {name:'Reroute via alt agent D', cost:'$0.10', speed:'~5s', score:48, successProbability:0.5, desc:'Replace C with backup agent D, replay from B'},
     ],
     evalReason:'Refund waterfall is deterministic. Alt routing risks further cascade.',
     commitAction:'Refund: C→B ($0.50), B→A ($1.20). All agents made whole.',
@@ -534,13 +544,42 @@ const SCENARIOS = [
     tag:'vision', mppError:'offramp-failed', category:'offramp',
     perceive:'Bank transfer to IBAN DE89... failed. Moonpay returned error 503.',
     candidates:[
-      {name:'Switch off-ramp provider', cost:'$1.50 fee', speed:'~2s', score:76, winner:true, desc:'Route through Ramp Network instead of Moonpay'},
-      {name:'Hold on-chain + notify', cost:'$0', speed:'~0.5s', score:68, desc:'Keep funds on Tempo, alert operator for manual resolution'},
+      {name:'Switch off-ramp provider', cost:'$1.50 fee', speed:'~2s', score:76, winner:true, successProbability:0.5, desc:'Route through Ramp Network instead of Moonpay'},
+      {name:'Hold on-chain + notify', cost:'$0', speed:'~0.5s', score:68, successProbability:0.5, desc:'Keep funds on Tempo, alert operator for manual resolution'},
     ],
     evalReason:'Auto-switching ensures funds reach bank. Holding delays the user.',
     commitAction:'Reroute to Ramp Network. Transfer initiated. ETA: 1 business day.',
     gene:{type:'offramp_failure', fix:'switch_provider'},
     savedAmount:400, balChange:{}
+  },
+  {
+    id:11, name:'Token Pause Mid-Transfer', desc:'TIP-20 token paused by issuer',
+    tag:'mock', mppError:'token-paused', category:'compliance',
+    perceive:'TIP-20 token USDC paused by issuer. All transfers revert.',
+    candidates:[
+      {name:'Switch USDC→USDT (unpaused)', cost:'$0.001', speed:'~0.8s', score:94, winner:true, successProbability:0.5, desc:'Swap to an unpaused USD stablecoin via DEX'},
+      {name:'Wait for unpause', cost:'$0', speed:'~30s', score:45, successProbability:0.5, desc:'Monitor pause state, auto-resume when unpaused'},
+      {name:'Abort and notify', cost:'$0', speed:'instant', score:30, successProbability:0.5, desc:'Abort transfer, notify caller with pause reason'},
+    ],
+    evalReason:'Switching to unpaused token is fastest and cheapest. USDT has full liquidity.',
+    commitAction:'Swap USDC → USDT via Tempo DEX. Retry transfer with USDT.',
+    gene:{type:'token_pause', fix:'switch_stablecoin'},
+    savedAmount:750, balChange:{usdt:'+0.05'}
+  },
+  {
+    id:12, name:'Fee Sponsor Exhausted', desc:'Sponsor account cannot pay gas',
+    tag:'mock', mppError:'sponsor-insufficient', category:'balance',
+    perceive:'Fee sponsor balance = 0. Cannot pay gas on behalf of agent.',
+    actualBalance: 0, requiredAmount: 0.0001,
+    candidates:[
+      {name:'Self-pay gas from wallet', cost:'$0.0001', speed:'~0.5s', score:92, winner:true, successProbability:0.5, desc:'Pay gas directly from agent wallet stablecoin'},
+      {name:'Switch to alt sponsor', cost:'$0', speed:'~1.2s', score:78, successProbability:0.5, desc:'Try alternate fee sponsor account'},
+      {name:'Abort and notify', cost:'$0', speed:'instant', score:25, successProbability:0.5, desc:'Abort and notify caller to fund sponsor'},
+    ],
+    evalReason:'Self-pay is near-instant. Gas cost negligible ($0.0001).',
+    commitAction:'Switch to self-pay gas mode. Retry original transaction.',
+    gene:{type:'sponsor_exhausted', fix:'fallback_self_pay'},
+    savedAmount:200, balChange:{}
   }
 ];
 
@@ -596,15 +635,34 @@ function triggerScenario(idx) {
   const isImmune = geneSet.has(sc.category);
   const delay = isImmune ? 200 : 600;
 
+  // If immune hit, update probability based on hit count
+  const hitCount = geneHitCounts.get(sc.category) || 0;
+  const updatedProbability = Math.min(0.5 + hitCount * 0.15, 0.95);
+
   resetPcecSteps();
 
   // ── P: Perceive ──
   setTimeout(() => {
     const stepP = document.getElementById('step-p');
     stepP.className = 'pcec-step active';
+
+    let perceiveExtra = '';
+    if (sc.actualBalance !== undefined && sc.actualBalance !== null) {
+      perceiveExtra += `<br><span style="color:var(--text-dim)">Extracted: </span>` +
+        `actualBalance=<span class="code">${sc.actualBalance}</span> ` +
+        `requiredAmount=<span class="code">${sc.requiredAmount}</span> ` +
+        `shortfall=<span style="color:var(--red)">${(sc.requiredAmount - sc.actualBalance).toFixed(2)}</span>`;
+    }
+    if (sc.availableToken) {
+      perceiveExtra += `<br><span style="color:var(--text-dim)">Extracted: </span>` +
+        `has=<span class="code">${sc.availableToken}</span> ` +
+        `needs=<span class="code">${sc.requiredToken}</span>`;
+    }
+
     document.getElementById('step-p-body').innerHTML =
-      `<span class="code">${sc.mppError}</span> &mdash; ${sc.perceive}<br>` +
-      `Category: <span class="code">${sc.category}</span> &bull; Severity: <span style="color:var(--red)">high</span>`;
+      `<span class="code">${sc.mppError}</span> &mdash; ${sc.perceive}` +
+      perceiveExtra +
+      `<br>Category: <span class="code">${sc.category}</span> &bull; Severity: <span style="color:var(--red)">high</span>`;
   }, 100);
 
   // ── C: Construct ──
@@ -614,15 +672,17 @@ function triggerScenario(idx) {
 
     if (isImmune) {
       stepC.className = 'pcec-step skipped';
-      document.getElementById('step-c-body').innerHTML = '<span class="skipped-msg">Skipped &mdash; Gene Map hit for ' + sc.category + '</span>';
+      document.getElementById('step-c-body').innerHTML = '<span class="skipped-msg">Skipped &mdash; Gene Map hit for ' + sc.category + ' (prob: ' + Math.round(updatedProbability * 100) + '%)</span>';
     } else {
       stepC.className = 'pcec-step active';
       let html = `<div style="margin-bottom:4px">${sc.candidates.length} repair candidates generated:</div><div class="candidates">`;
       for (const c of sc.candidates) {
+        const prob = (c.winner && isImmune) ? updatedProbability : (c.successProbability || 0.5);
+        const probColor = prob >= 0.7 ? 'var(--green)' : prob >= 0.5 ? 'var(--amber)' : 'var(--text-dim)';
         html += `<div class="cand-card ${c.winner ? 'winner' : ''}">
           <div class="cand-name">${c.name}</div>
           <div class="cand-desc">${c.desc}</div>
-          <div class="cand-meta"><span>Cost: <b>${c.cost}</b></span><span>Speed: <b>${c.speed}</b></span></div>
+          <div class="cand-meta"><span>Cost: <b>${c.cost}</b></span><span>Speed: <b>${c.speed}</b></span><span>Gene Hit: <b style="color:${probColor}">${Math.round(prob * 100)}%</b></span></div>
           <div class="score-bar-wrap"><div class="score-bar-fill" style="width:${c.score}%"></div></div>
           <div class="score-label">${c.score}/100${c.winner ? ' ★' : ''}</div>
         </div>`;
@@ -731,6 +791,7 @@ let W, H;
 
 const stats = { failures: 0, repairs: 0, revenue: 0, genes: 0, immune: 0 };
 const geneSet = new Set();
+const geneHitCounts = new Map();
 
 function updateStats() {
   document.getElementById('s-fail').textContent = stats.failures;
@@ -850,9 +911,9 @@ function camRotate(dir){camDir=(camDir+dir+4)%4;}
 // ══════════════════════════════════════════════════════════════
 // Injection — triggers BOTH canvas animation AND detail panel
 // ══════════════════════════════════════════════════════════════
-const SCENARIO_NAMES = ['payment-insufficient','invalid-challenge','method-unsupported','verification-failed','tx-reverted','service-500','swap-reverted','tip-403','cascade-failure','offramp-failed'];
-const SCENARIO_CATS = ['balance','session','currency','signature','batch','service','dex','compliance','cascade','offramp'];
-const SCENARIO_STRATS = ['swap_currency','renew_session','swap_direct','refresh_nonce','remove_and_resubmit','retry_with_receipt','split_swap','switch_stablecoin','refund_waterfall','switch_offramp'];
+const SCENARIO_NAMES = ['payment-insufficient','invalid-challenge','method-unsupported','verification-failed','tx-reverted','service-500','swap-reverted','tip-403','cascade-failure','offramp-failed','token-paused','sponsor-insufficient'];
+const SCENARIO_CATS = ['balance','session','currency','signature','batch','service','dex','compliance','cascade','offramp','compliance','balance'];
+const SCENARIO_STRATS = ['swap_currency','renew_session','swap_direct','refresh_nonce','remove_and_resubmit','retry_with_receipt','split_swap','switch_stablecoin','refund_waterfall','switch_offramp','switch_stablecoin','fallback_self_pay'];
 
 function inject(idx) {
   const workerIdx = idx % workers.length;
@@ -861,12 +922,29 @@ function inject(idx) {
   const code = SCENARIO_NAMES[idx], cat = SCENARIO_CATS[idx], strat = SCENARIO_STRATS[idx];
   const isImmune = geneSet.has(cat);
 
+  // Safety limit visual indicator
+  const safetyEl = document.getElementById('pcec-safety');
+  if (safetyEl) {
+    safetyEl.innerHTML = 'PCEC: <b style="color:var(--green)">SAFE</b>';
+    if (!window._injectCounts) window._injectCounts = {};
+    window._injectCounts[idx] = (window._injectCounts[idx] || 0) + 1;
+    if (window._injectCounts[idx] > 3) {
+      safetyEl.innerHTML = 'PCEC: <b style="color:var(--red)">LIMIT</b>';
+      setTimeout(() => {
+        safetyEl.innerHTML = 'PCEC: <b style="color:var(--green)">SAFE</b>';
+        window._injectCounts[idx] = 0;
+      }, 1500);
+    }
+  }
+
   stats.failures++;
 
   // Trigger detail panel
   triggerScenario(idx);
 
   if (isImmune) {
+    // Track immune hit count for successProbability upgrade
+    geneHitCounts.set(cat, (geneHitCounts.get(cat) || 1) + 1);
     stats.immune++; stats.repairs++; stats.revenue += SCENARIOS[idx].savedAmount;
     w.setImmune('⚡ IMMUNE: ' + strat);
     logEvent(`[IMMUNE] ${code} → instant fix via ${strat}`);

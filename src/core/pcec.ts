@@ -126,6 +126,26 @@ export function perceive(error: unknown, _context?: RepairContext): FailureClass
     details = (obj.message as string) ?? JSON.stringify(obj);
   }
 
+  // Extract structured values from error message
+  let actualBalance: number | undefined;
+  let requiredAmount: number | undefined;
+
+  if (error instanceof Error) {
+    const msg = error.message;
+
+    // Match "have 12.50 USDC" or "balance: 12.50"
+    const balanceMatch = msg.match(/have\s+([\d.]+)\s+\w+|balance[:\s]+([\d.]+)/i);
+    if (balanceMatch) {
+      actualBalance = parseFloat(balanceMatch[1] ?? balanceMatch[2]);
+    }
+
+    // Match "Payment of 500 USDC" or "requires 500"
+    const amountMatch = msg.match(/[Pp]ayment\s+of\s+([\d.]+)|requires\s+([\d.]+)/);
+    if (amountMatch) {
+      requiredAmount = parseFloat(amountMatch[1] ?? amountMatch[2]);
+    }
+  }
+
   return {
     code,
     category,
@@ -133,6 +153,8 @@ export function perceive(error: unknown, _context?: RepairContext): FailureClass
     details,
     rawError: error,
     timestamp: Date.now(),
+    actualBalance,
+    requiredAmount,
   };
 }
 
@@ -148,6 +170,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 800,
       requirements: ['alt_stablecoin_balance'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'topup_from_reserve',
@@ -157,6 +180,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 1200,
       requirements: ['reserve_wallet', 'reserve_balance'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'reduce_request',
@@ -166,6 +190,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 100,
       requirements: ['partial_payment_support'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   session: [
@@ -177,6 +202,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 300,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'switch_to_charge',
@@ -186,6 +212,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 500,
       requirements: ['charge_support'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   currency: [
@@ -197,6 +224,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 600,
       requirements: ['dex_liquidity'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'swap_multihop',
@@ -206,6 +234,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 1500,
       requirements: ['dex_liquidity', 'intermediate_pair'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'switch_service',
@@ -215,6 +244,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 200,
       requirements: ['alt_service'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   signature: [
@@ -226,6 +256,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 400,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'rederive_key',
@@ -235,6 +266,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 600,
       requirements: ['wallet_access'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   batch: [
@@ -246,6 +278,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 500,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'fix_and_retry_all',
@@ -255,6 +288,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 1000,
       requirements: ['item_fixable'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'split_batch',
@@ -264,6 +298,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 2000,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   service: [
@@ -275,6 +310,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 200,
       requirements: ['valid_receipt'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'switch_provider',
@@ -284,6 +320,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 800,
       requirements: ['alt_provider'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'request_refund',
@@ -293,6 +330,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 3000,
       requirements: ['refund_support'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   dex: [
@@ -304,6 +342,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 1200,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'swap_multihop_dex',
@@ -313,6 +352,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 1800,
       requirements: ['alt_pool'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'wait_and_retry',
@@ -322,6 +362,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 5000,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   compliance: [
@@ -333,6 +374,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 700,
       requirements: ['unrestricted_coin_balance'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'route_via_compliant_wallet',
@@ -342,6 +384,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 2000,
       requirements: ['compliant_wallet'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   cascade: [
@@ -353,6 +396,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 3000,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'reroute_via_alt',
@@ -362,6 +406,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 5000,
       requirements: ['alt_agent'],
       score: 0,
+      successProbability: 0.5,
     },
   ],
   offramp: [
@@ -373,6 +418,7 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 2000,
       requirements: ['alt_offramp'],
       score: 0,
+      successProbability: 0.5,
     },
     {
       id: 'hold_and_notify',
@@ -382,13 +428,20 @@ const REPAIR_STRATEGIES: Record<FailureCategory, RepairCandidate[]> = {
       estimatedSpeedMs: 500,
       requirements: [],
       score: 0,
+      successProbability: 0.5,
     },
   ],
 };
 
-export function construct(failure: FailureClassification): RepairCandidate[] {
+export function construct(failure: FailureClassification, geneMap?: GeneMap): RepairCandidate[] {
   const templates = REPAIR_STRATEGIES[failure.category] ?? [];
-  return templates.map((t) => ({ ...t, score: 0 }));
+  return templates.map((t) => ({
+    ...t,
+    score: 0,
+    successProbability: geneMap
+      ? geneMap.getSuccessRate(failure.code, t.strategy)
+      : 0.5,
+  }));
 }
 
 // ── Evaluate ────────────────────────────────────────────────────────
@@ -406,11 +459,12 @@ export function evaluate(candidates: RepairCandidate[], failure: FailureClassifi
 
   return candidates
     .map((c) => {
-      const speedScore = 35 * (1 - c.estimatedSpeedMs / maxSpeed);
-      const costScore = 30 * (1 - c.estimatedCostUsd / maxCost);
-      const reqScore = 20 * (1 - c.requirements.length / 3);
+      const speedScore = 25 * (1 - c.estimatedSpeedMs / maxSpeed);
+      const costScore = 25 * (1 - c.estimatedCostUsd / maxCost);
+      const reqScore = 15 * (1 - c.requirements.length / 3);
+      const probScore = 25 * (c.successProbability ?? 0.5);
       const sevBonus = severityBonus[failure.severity];
-      const score = Math.min(100, Math.round(speedScore + costScore + reqScore + sevBonus));
+      const score = Math.min(100, Math.round(speedScore + costScore + reqScore + probScore + sevBonus));
       return { ...c, score };
     })
     .sort((a, b) => b.score - a.score);
@@ -440,6 +494,10 @@ export class PcecEngine {
   private geneMap: GeneMap;
   private agentId: string;
   public stats = { repairs: 0, savedRevenue: 0, immuneHits: 0 };
+  private readonly MAX_CYCLES = 3;
+  private readonly MAX_COST_RATIO = 0.1;
+  private cycleCount = 0;
+  private totalRepairCost = 0;
 
   constructor(geneMap: GeneMap, agentId: string = 'default') {
     this.geneMap = geneMap;
@@ -449,6 +507,27 @@ export class PcecEngine {
   async repair(error: unknown, context?: RepairContext): Promise<RepairResult> {
     const start = Date.now();
 
+    // Safety check: prevent infinite repair cycles
+    this.cycleCount++;
+    if (this.cycleCount > this.MAX_CYCLES) {
+      this.cycleCount = 0;
+      bus.emit('error', this.agentId, {
+        reason: 'MAX_CYCLES_EXCEEDED',
+        cycles: this.MAX_CYCLES,
+        message: `PCEC halted after ${this.MAX_CYCLES} cycles to prevent runaway repair`,
+      });
+      return {
+        success: false,
+        failure: perceive(error),
+        candidates: [],
+        winner: null,
+        gene: null,
+        immune: false,
+        totalMs: 0,
+        revenueProtected: 0,
+      };
+    }
+
     // ── PERCEIVE ──
     const failure = perceive(error, context);
     bus.emit('perceive', this.agentId, {
@@ -456,6 +535,8 @@ export class PcecEngine {
       category: failure.category,
       severity: failure.severity,
       details: failure.details,
+      actualBalance: failure.actualBalance,
+      requiredAmount: failure.requiredAmount,
     });
 
     // ── Check Gene Map for immunity ──
@@ -497,6 +578,7 @@ export class PcecEngine {
           estimatedSpeedMs: immuneMs,
           requirements: [],
           score: 100,
+          successProbability: 0.99,
         },
         gene: existingGene,
         immune: true,
@@ -506,7 +588,7 @@ export class PcecEngine {
     }
 
     // ── CONSTRUCT ──
-    const candidates = construct(failure);
+    const candidates = construct(failure, this.geneMap);
     bus.emit('construct', this.agentId, {
       category: failure.category,
       candidateCount: candidates.length,
@@ -541,6 +623,8 @@ export class PcecEngine {
         avgRepairMs: totalMs,
       };
       this.geneMap.store(gene);
+      this.totalRepairCost += winner.estimatedCostUsd;
+      this.cycleCount = 0;
 
       bus.emit('commit', this.agentId, {
         success: true,

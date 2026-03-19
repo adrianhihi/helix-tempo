@@ -106,6 +106,17 @@ export class GeneMap {
     return row.count;
   }
 
+  getSuccessRate(failureCode: string, strategy: string): number {
+    const row = this.db.prepare(`
+      SELECT success_count FROM genes
+      WHERE failure_code = ? AND strategy = ?
+    `).get(failureCode, strategy) as { success_count: number } | undefined;
+
+    if (!row || row.success_count < 3) return 0.5; // too few samples, return neutral
+    // More successes → higher probability, capped at 0.95
+    return Math.min(0.5 + (row.success_count / 100), 0.95);
+  }
+
   close(): void {
     this.db.close();
   }

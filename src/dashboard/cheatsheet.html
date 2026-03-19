@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Helix × Tempo — Judge Q&A Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080c;--bg2:#0c0f16;--s1:rgba(255,255,255,0.03);--s2:rgba(255,255,255,0.06);--b:rgba(255,255,255,0.07);--t:#e8ecf4;--tm:#7b83a0;--td:#3d4560;--amber:#f0a030;--green:#4ade80;--red:#f87171;--blue:#60a5fa;--purple:#a78bfa;--teal:#2dd4bf;--mono:'JetBrains Mono',monospace;--sans:'Outfit',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--t);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 50% 35% at 10% 0%,rgba(240,160,48,0.05),transparent 55%),radial-gradient(ellipse 40% 30% at 90% 5%,rgba(45,212,191,0.04),transparent 50%)}
+.page{max-width:860px;margin:0 auto;padding:32px 20px 80px;position:relative;z-index:1}
+
+/* Header */
+.hdr{text-align:center;margin-bottom:40px;padding-top:12px}
+.hdr h1{font-size:32px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.hdr h1 span{color:var(--amber)}
+.hdr p{color:var(--tm);font-size:14px}
+
+/* Category */
+.cat{margin-bottom:32px}
+.cat-title{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--b)}
+.cat-icon{font-size:20px}
+.cat-name{font-size:18px;font-weight:700;letter-spacing:-.02em}
+.cat-count{margin-left:auto;font-size:11px;color:var(--td);font-family:var(--mono)}
+
+/* QA Card */
+.qa{margin-bottom:12px;border:1px solid var(--b);border-radius:12px;background:var(--s1);overflow:hidden}
+.qa-q{padding:14px 18px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;transition:background .15s}
+.qa-q:hover{background:var(--s2)}
+.qa-q .tag{font-size:9px;padding:2px 8px;border-radius:4px;font-weight:700;flex-shrink:0;margin-top:3px;font-family:var(--mono)}
+.tag-likely{background:rgba(248,113,113,0.12);color:var(--red)}
+.tag-medium{background:rgba(240,160,48,0.12);color:var(--amber)}
+.tag-deep{background:rgba(167,139,250,0.12);color:var(--purple)}
+.qa-q .question{font-size:14px;font-weight:600;flex:1}
+.qa-q .arrow{color:var(--td);font-size:14px;flex-shrink:0;transition:transform .2s;margin-top:2px}
+.qa.open .qa-q .arrow{transform:rotate(90deg)}
+.qa-a{display:none;padding:0 18px 16px;border-top:1px solid var(--b)}
+.qa.open .qa-a{display:block}
+.qa-a .answer{padding-top:14px;font-size:13.5px;color:var(--tm);line-height:1.75}
+.qa-a .answer strong{color:var(--t);font-weight:600}
+.qa-a .script{margin-top:12px;padding:14px 16px;border-radius:8px;background:var(--bg2);border:1px solid var(--b);font-size:12.5px;line-height:1.8;color:var(--green);font-family:var(--mono);white-space:pre-wrap}
+.qa-a .note{margin-top:10px;padding:10px 14px;border-radius:8px;border-left:3px solid var(--amber);background:rgba(240,160,48,0.04);font-size:12px;color:var(--amber)}
+
+/* Print styles */
+@media print{body{background:#fff;color:#111}.qa-a{display:block!important}.qa{break-inside:avoid}
+.qa-a .answer{color:#333}.qa-a .script{background:#f5f5f5;color:#166534;border-color:#ddd}.hdr h1 span{color:#b45309}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hdr">
+  <h1>🧬 <span>Helix × Tempo</span> — Judge Q&A</h1>
+  <p>Cheat Sheet · Tempo × Stripe HIIT Hackathon · March 19, 2026</p>
+</div>
+
+<!-- ═══ 1: PRODUCT & VISION ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">🎯</span><span class="cat-name">Product & Vision</span><span class="cat-count">6 questions</span></div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">What does Helix actually do? One sentence.</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Helix wraps any AI agent's payment calls with a self-repair engine — when a payment fails, it automatically classifies the failure, generates repair candidates, picks the best fix, executes it, and retries. Every repair is stored so the same failure never happens twice."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">Why not just add retry logic? What's different about Helix?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Retry logic is dumb — it just waits and tries again. Helix is intelligent repair. A 'payment-insufficient' error doesn't need a retry, it needs a currency swap. A 'session expired' needs a session renewal, not a retry. PCEC classifies the failure type, generates 2-3 specific repair strategies, scores them by cost and speed, and executes the best one. Then it stores the fix as a Gene Capsule so next time it's instant. Retry logic learns nothing."</div>
+    <div class="note">Key phrase: "Retry is a hammer. PCEC is a surgeon."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">How is this different from Stripe Smart Retries?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Stripe Smart Retries work at the card network level — they retry the same charge at different times. Helix works at the agent infrastructure level — it doesn't retry the same action, it repairs the underlying problem. If your agent doesn't have enough USDC, Stripe retrying won't help. Helix sees the insufficient balance, swaps EURC→USDC via Tempo's DEX, and then pays. Different layer, different capability."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Why build on Tempo specifically? Could this work on any chain?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"The PCEC repair engine is chain-agnostic in principle. But Tempo gives us three things no other chain has: 1) MPP is the native payment protocol with structured error codes — we parse those directly. 2) Native DEX for instant currency swaps as repair actions. 3) Batch transactions + payment lanes for batch repair scenarios. We're not 'can run on any chain' — we're deeply integrated with Tempo's specific features."</div>
+    <div class="note">Judges WANT to hear Tempo-specific integration, not chain-agnostic. You're building FOR Tempo.</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Who's the customer? Developers? Agents? Companies?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Developers who build AI agents that make payments. Two lines of code: import { wrap } from '@helix/tempo' and const safe = wrap(myAgent). That's it. The developer's agent code doesn't change at all. Helix is a transparent proxy — the caller doesn't even know it's there until something fails."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">What's the Gene Map? How does it work?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Gene Map is a local SQLite database that stores every successful repair as a 'Gene Capsule' — a record of: what failed, how it was fixed, and how fast. Next time the same failure pattern appears, PCEC skips candidate generation and evaluation, and applies the known fix instantly. In our benchmark, 9 out of 14 failures were resolved this way — instant, zero-cost repair from memory. That's the network effect: more failures fixed → more genes → faster repairs → more value."</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 2: TECHNICAL ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">🔧</span><span class="cat-name">Technical Deep Dives</span><span class="cat-count">7 questions</span></div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">Are these 12 failure scenarios real? Or made up?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <strong>Scenarios 1-6 are directly from the MPP protocol spec:</strong> The MPP protocol at mpp.dev/protocol defines exactly these error codes — <code>payment-insufficient</code>, <code>invalid-challenge</code>, <code>method-unsupported</code>, <code>verification-failed</code>, <code>malformed-credential</code>. These are in the IETF draft, RFC 9457 structured errors. Scenario 5 (batch revert) is from Tempo's docs which say "if any operation fails, the entire batch reverts."
+    <br><br>
+    <strong>Scenarios 7-8 are real platform risks:</strong> Any DEX has slippage reverts (scenario 7). Tempo's TIP-403 compliance registry can block transfers (scenario 8).
+    <br><br>
+    <strong>Scenarios 9-10 are vision items:</strong> Cascade failure is based on Galileo AI research showing 1 compromised agent affects 87% of downstream decisions in 4 hours. Off-ramp failure is confirmed by Transak as "the primary failure mode" in stablecoin payroll.
+    <div class="script">"Scenarios 1-6 map directly to MPP's error code table in the IETF spec. 7-8 are real Tempo platform risks. 9-10 are vision items backed by industry research. We tagged them honestly as LIVE, MOCK, and VISION."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">What's PCEC? Walk me through how it works.</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"PCEC = Perceive, Construct, Evaluate, Commit. Four steps:
+
+P — Perceive: Parse the MPP 402 error response, classify it. 'payment-insufficient' → category: balance, severity: low.
+
+C — Construct: Generate 2-3 repair candidates. For balance: swap alt stablecoin ($0.001, 0.5s), top-up from reserve ($0, 2s), reduce request amount ($0, instant).
+
+E — Evaluate: Score each candidate 0-100 by speed, cost, and historical success. Swap wins at score 96.
+
+K — Commit: Execute the swap via Tempo DEX, retry the payment, store the fix as a Gene Capsule. Next time → instant."</div>
+    <div class="note">Walk through with hand gestures: P (point to eyes), C (spread fingers = options), E (thumbs up/down), K (fist = execute).</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">How do you parse MPP errors? What format?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"MPP uses RFC 9457 Problem Details — structured JSON responses with a 'type' field like 'https://paymentauth.org/problems/payment-insufficient'. We parse the type URI to extract the error code, then classify by category. The error space is bounded — MPP defines exactly 7 error codes. We handle all 7 plus 3 additional Tempo-specific ones (batch revert, DEX slippage, compliance block)."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Why is the error space bounded? How do you know you cover everything?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"MPP's error codes are defined in an IETF spec — there are exactly 7: payment-required, payment-insufficient, payment-expired, verification-failed, method-unsupported, malformed-credential, invalid-challenge. We added 3 from Tempo's specific features (batch revert, DEX, compliance). The repair strategies are also deterministic — for each category, we generate a fixed set of 2-3 candidates. And Evaluate scores by math (speed + cost + requirements), not AI. The whole pipeline is enumerable. That's what makes it reliable."</div>
+    <div class="note">This is your strongest technical argument. Error space = finite. Repairs = deterministic. Scoring = mathematical. No hallucination risk.</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Is the retry safe? What about double-charging?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"MPP has idempotency built into the protocol. The Payment credential contains a challenge ID — if you retry with the same credential, the server recognizes it and doesn't charge again. For scenario 6 (service down after payment), we retry with the existing Payment-Receipt header — the server sees the receipt is valid and returns the resource without a new charge. This is by design in the MPP spec."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">How does this relate to SAGA pattern in distributed transactions?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"PCEC is SAGA-aware. For cascade scenarios like A→B→C where C fails, we execute compensating transactions in reverse order — classic SAGA pattern. But PCEC goes further than pure SAGA: it doesn't just rollback, it generates multiple repair candidates and picks the optimal one. Sometimes the best fix isn't a refund — it's rerouting through agent D. SAGA gives you undo. PCEC gives you undo OR fix OR reroute, scored by cost and speed."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">What happens when PCEC can't fix something?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"It fails honestly. In our benchmark, 2 of 14 failures were unrecoverable — a task that genuinely needed 200K tokens (context overflow beyond repair) and a persistent server outage (3 retries exhausted). PCEC marks these as 'unrecoverable', stores a Gene noting the pattern, and propagates the original error to the caller. We don't hide failures. We fix what we can and report what we can't."</div>
+    <div class="note">The 2 unrecoverable failures are your CREDIBILITY play. Judges trust teams that know their limits.</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 3: BENCHMARK ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">📊</span><span class="cat-name">Benchmark & Data</span><span class="cat-count">6 questions</span></div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">Explain the 68% → 90% number. How did you get it?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"We ran 50 HumanEval coding tasks with GPT-4o-mini. We injected infrastructure failures at realistic rates using a fixed seed — 8% rate limit, 5% timeout, 3% context overflow, 2% server error, 2% JSON parse. Total ~20% failure rate across 50 API calls.
+
+Without Helix: 14 tasks failed due to infrastructure. 36 completed, 34 passed. 68% pass@1.
+With Helix: same seed, same failures. PCEC repaired 12 of 14. 48 completed, 45 passed. 90% pass@1.
+
+The 2 it couldn't fix: one genuine context overflow, one persistent server outage. We report both honestly."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">But you injected the failures yourself — isn't that cheating?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"We inject at realistic rates based on real-world API reliability data. Over 50 sequential API calls, the probability of hitting at least one failure is ~22% — that's math, not fiction. We use a fixed seed so anyone can reproduce our exact results — same seed 42, same failures, every time. Both runs see identical failures. The ONLY variable is whether Helix catches them. That's a controlled experiment, not cheating."</div>
+    <div class="note">If they push harder: "Would you prefer we waited for OpenAI to actually go down during our demo? We simulate what inevitably happens in production."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Why HumanEval? Isn't that outdated?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"HumanEval is a proof of concept for the repair engine — it's the most universally recognized coding benchmark, so everyone can calibrate the numbers. We're not claiming to improve the model's intelligence. We're showing that infrastructure reliability matters.
+
+For production, SWE-bench Verified is the next benchmark — 500 real GitHub issues, multi-file patches, much higher failure rate. Helix's value would be even more dramatic there. We chose HumanEval for the hackathon because it's fast, cheap, and everyone knows it."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">What does HumanEval have to do with payments?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <strong>This is the key distinction:</strong>
+    <div class="script">"Nothing directly. HumanEval doesn't test payments — it tests our PCEC repair engine. The payment scenarios on our dashboard show WHAT Helix fixes. The benchmark shows that the repair mechanism WORKS in a real API environment. Same engine, two domains:
+
+- Payment failures: insufficient balance → swap_currency
+- Infrastructure failures: 429 rate limit → backoff_retry
+
+Both go through the same Perceive→Construct→Evaluate→Commit loop. HumanEval proves the engine is reliable. Payment Lab proves the engine knows payments."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Why GPT-4o-mini and not Claude or GPT-4?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"GPT-4o-mini's HumanEval score is publicly known — around 86-87% under clean conditions. That gives evaluators a baseline to calibrate against. Claude's HumanEval numbers aren't as widely published. And we're not trying to showcase a model — we're showcasing infrastructure. Using a well-known mid-tier model makes the improvement more credible."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">Can I reproduce this? How?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Yes. git clone, npm install, OPENAI_API_KEY=your-key npm run benchmark. Seed 42 produces identical failure injection every run. The only variance is model output quality, which is the model's problem, not ours. Our repair rate should be consistent within ±1-2% across runs."</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 4: BUSINESS ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">💰</span><span class="cat-name">Business & Market</span><span class="cat-count">5 questions</span></div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">What's the business model?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"0.1% of recovered transaction value. Helix only makes money when it saves yours. If a $500 payment was about to fail and Helix repairs it, we take $0.50. If nothing fails, you pay nothing. Fully aligned incentives."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">How big is this market?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Visa processes $1.8T per day. Agent commerce is projected at $3-5T by 2030 — Sam Altman's World estimates agents could account for 25% of US e-commerce. At a 5-8% payment failure rate on agent transactions, that's $150-400B per day at risk. Helix takes 0.1% of what it recovers. Even capturing 1% of recoverable failures is a massive business."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Who are your competitors?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Nobody is doing agent payment self-healing. Raw MPP handles the happy path but has no failure recovery. Coinbase's x402 protocol explicitly lacks — quoting CoinGecko's analysis — 'network reliability management, retry mechanisms, and transaction tracing.' Stripe Smart Retries work at the card network level, not the agent infrastructure level. We verified: no one in the Tempo ecosystem is building this."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">What's the moat? Can't Tempo just build this themselves?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Tempo's focus is protocol-layer — making the blockchain fast, cheap, and reliable. That's preventive. We're application-layer — repairing failures after they happen. That's reactive + learning. Different layer, different expertise.
+
+The real moat is the Gene Map. Every repair makes the next one faster. Every agent using Helix contributes to a shared knowledge base. More agents → more genes → higher success rate → more agents. Network effect compounds. A new competitor starts with zero genes."</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">What's the roadmap after hackathon?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Phase 1 (now): SDK with 12 failure scenarios, terminal + dashboard, HumanEval benchmark proof.
+
+Phase 2 (Q2): Cascading multi-agent repair, off-ramp failure recovery, Gene Economy where agents trade repair strategies.
+
+Phase 3 (Q3): Shared Gene Network across all agents on Tempo, predictive failure prevention — fix problems before they happen based on Gene Map patterns.
+
+The endgame: every AI agent on Tempo gets smarter because of every other agent's failures."</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 5: DEMO RECOVERY ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">🎭</span><span class="cat-name">Demo Recovery & Edge Cases</span><span class="cat-count">4 questions</span></div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-likely">LIKELY</span><span class="question">Can you show me the code? How does wrap() work?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"wrap() takes any async function and returns an identical function. Inside, it wraps the call in try/catch. On error, it runs PCEC repair. If repair succeeds, it retries the original function. The caller sees the same input→output contract — they don't know Helix exists until something fails."</div>
+    <strong>Show this code on screen:</strong>
+    <div class="script" style="color:var(--blue)">import { wrap } from '@helix/tempo';
+
+const myAgent = async (input) => {
+  const res = await fetch('https://api.example.com/v1/data');
+  return res.json();
+};
+
+// Same input, same output. Self-healing is transparent.
+const resilient = wrap(myAgent);</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">What if the demo crashes?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <strong>Recovery plan:</strong>
+    <div class="script">If terminal demo crashes:
+→ Switch to browser dashboard at localhost:7842
+→ Use inject buttons to trigger scenarios manually
+→ "The irony of a self-healing demo needing repair is not lost on me"
+
+If dashboard doesn't load:
+→ Open benchmark page at localhost:7842/benchmark
+→ Show the 68%→90% numbers
+→ "Let me show you the data instead"
+
+If everything is down:
+→ Open the pitch deck HTML (offline, no server needed)
+→ Walk through slides with screenshots
+→ "The code is on GitHub, let me walk you through the architecture"</div>
+    <div class="note">Always have the pitch deck HTML open in a browser tab as backup. It works offline.</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-medium">MEDIUM</span><span class="question">Is this actually running on Tempo mainnet?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"The PCEC engine runs for real — it actually classifies failures, generates candidates, scores them, and stores Gene Capsules in SQLite. The Tempo chain interactions are simulated for the hackathon since mainnet just launched yesterday. The architecture is production-ready — we'd swap the mock Tempo calls with real mppx SDK calls. The intelligence layer (PCEC + Gene Map) is 100% real."</div>
+    <div class="note">Be honest. "Real engine, simulated chain calls" is the right framing. Don't claim it's on mainnet.</div>
+  </div></div>
+</div>
+
+<div class="qa" onclick="this.classList.toggle('open')">
+  <div class="qa-q"><span class="tag tag-deep">DEEP</span><span class="question">What about security? Can a malicious repair strategy drain a wallet?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">"Three safeguards: 1) Monthly budget cap in helix.config — PCEC won't execute repairs that exceed the configured budget. 2) All repair candidates have cost estimates — Evaluate rejects anything above a threshold. 3) Gene Capsules store strategies, not credentials — a Gene says 'swap EURC→USDC' not 'send to this address.' The wallet's signing key never touches the Gene Map."</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 6: KILLER PHRASES ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">⚡</span><span class="cat-name">Killer Phrases to Drop</span><span class="cat-count">ready to use</span></div>
+
+<div class="qa open">
+  <div class="qa-q"><span class="tag tag-likely">USE</span><span class="question">Memorize these one-liners</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">Opening:
+"Stripe built payments for humans. Helix builds payments for machines."
+
+The problem:
+"Agent payments fail silently. No retry. No fallback. No learning. Task dies, revenue lost."
+
+The benchmark:
+"GPT-4o-mini: 68% → 90% on HumanEval. Not a better model. Better infrastructure."
+
+Honesty play:
+"12 of 14 failures recovered. 2 beyond repair. We don't fake perfection."
+
+The moat:
+"Every repair makes the next one faster. Every gene capsule makes the network more resilient. That's the moat."
+
+Closing:
+"This is one benchmark on 50 tasks. Imagine this on Tempo's payment lane — $500B/day of agent transactions, each one self-healing."</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ 7: DEMO FLOW ═══ -->
+<div class="cat">
+<div class="cat-title"><span class="cat-icon">🎬</span><span class="cat-name">Demo Flow Reminder</span><span class="cat-count">5 steps</span></div>
+
+<div class="qa open">
+  <div class="qa-q"><span class="tag tag-likely">ORDER</span><span class="question">Exact demo sequence</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="answer">
+    <div class="script">1. Pitch deck slides 1-7           (~3 min)
+   → Problem → PCEC → 2 lines code → 12 scenarios → 68%→90% → TAM
+
+2. Terminal: npx helix init          (~30 sec)
+   → Walk through CLI wizard
+
+3. Terminal: npm run demo             (~1 min)
+   → 12 failures repair in real-time, show IMMUNE on repeat
+
+4. Browser: localhost:7842            (~1 min)
+   → Minecraft lab, click inject buttons, show detail panel
+
+5. Browser: localhost:7842/benchmark  (~30 sec)
+   → 68%→90% stays on screen as closing shot
+   → "We didn't build a better model. We built infrastructure
+      that doesn't let failures go to waste."</div>
+    <div class="note">Total: ~6 minutes. Practice this sequence 3 times before going on stage.</div>
+  </div></div>
+</div>
+
+</div>
+
+<!-- ═══ NEW Q&As: Scenarios 11-12, LLM Fallback, Token Pause ═══ -->
+<div class="cat">
+  <div class="cat-title"><span class="cat-icon">🧬</span><span class="cat-name">New Scenarios & Advanced Architecture</span><span class="cat-count">5 Q&As</span></div>
+
+  <div class="qa"><div class="qa-q" onclick="this.parentElement.classList.toggle('open')"><span class="tag tag-likely">LIKELY</span><span class="question">What about Token Pause? How do you handle that?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="script">"TIP-20 spec allows issuers to pause any token — like Circle's USDC freeze. If USDC gets paused mid-transfer, all transfers revert. Helix detects token-paused error → queries TIP-20 Factory for alternative USD stablecoins → swaps to unpaused token (e.g. USDT) → retries. Gene stores which tokens are unstable. This is scenario 11."</div></div></div>
+
+  <div class="qa"><div class="qa-q" onclick="this.parentElement.classList.toggle('open')"><span class="tag tag-medium">MEDIUM</span><span class="question">What happens when a fee sponsor runs out of gas?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="script">"Tempo supports fee sponsorship — a third party pays gas on behalf of the agent. If the sponsor balance hits zero, the agent's tx silently fails. Helix catches the sponsor-insufficient error → switches to self-pay mode (gas from agent's own wallet, cost ~$0.0001) → retries. Gene stores fallback preference. This is scenario 12."</div></div></div>
+
+  <div class="qa"><div class="qa-q" onclick="this.parentElement.classList.toggle('open')"><span class="tag tag-likely">LIKELY</span><span class="question">What if you encounter a failure type you've never seen?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="script">"Three layers of defense. First, the error space is bounded — MPP defines 7 error codes, we added 5 Tempo-specific ones. That covers 95%+ of cases.
+
+For the remaining 5%: LLM Fallback. When Gene Map returns a miss, PCEC sends the full failure context — error code, message, wallet state, protocol context — to an LLM. The LLM generates repair candidates. We validate them in a sandbox before execution. If successful, the repair becomes a new Gene Capsule tagged with source: 'llm' and low initial confidence.
+
+Over time, LLM-generated Genes that keep working get promoted to high confidence. It's a trust ladder — PCEC Genes are trusted immediately, LLM Genes earn trust through production validation."</div></div></div>
+
+  <div class="qa"><div class="qa-q" onclick="this.parentElement.classList.toggle('open')"><span class="tag tag-deep">DEEP</span><span class="question">How does the LLM Fallback affect your costs?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="script">"LLM calls only happen on Gene Map misses — which after the first few weeks of operation will be extremely rare, maybe 1-2% of failures. The other 98% are handled by cached Genes at zero LLM cost. And each LLM call creates a new Gene, so the same unknown failure never triggers an LLM call twice. The cost converges to near-zero over time. That's the Gene Map network effect applied to LLM costs."</div></div></div>
+
+  <div class="qa"><div class="qa-q" onclick="this.parentElement.classList.toggle('open')"><span class="tag tag-medium">MEDIUM</span><span class="question">Do Gene strategies go stale? What about protocol upgrades?</span><span class="arrow">›</span></div>
+  <div class="qa-a"><div class="script">"Two mechanisms. Short-term: LLM Fallback handles new error codes from protocol upgrades by generating new Genes on the fly.
+
+Long-term: we're building evolutionary parameter optimization. Each Gene has parameters — slippage tolerance, split count, wait time. These need different values under different market conditions. Evolution algorithms search the parameter space continuously, so Genes adapt to changing conditions automatically.
+
+The Gene Map isn't static — it's a living knowledge base that both grows (via LLM) and sharpens (via evolution)."</div></div></div>
+</div>
+
+</div>
+
+<script>
+// Print hint
+if(window.matchMedia('print').matches === false) {
+  console.log('Tip: Cmd+P to print this as a PDF for offline reference');
+}
+</script>
+</body>
+</html>

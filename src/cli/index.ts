@@ -62,7 +62,7 @@ async function initWizard() {
   console.log(`${C.dim}Next steps:${C.reset}`);
   console.log(`  1. ${C.white}import { wrap } from '@helix/tempo'${C.reset}`);
   console.log(`  2. ${C.white}const safePay = wrap(myAgent.pay)${C.reset}`);
-  console.log(`  3. ${C.white}npm run demo${C.reset}   — see all 10 failure scenarios`);
+  console.log(`  3. ${C.white}npm run demo${C.reset}   — see all 12 failure scenarios`);
   console.log(`  4. ${C.white}npm run dash${C.reset}   — open the Minecraft isometric lab\n`);
 }
 
@@ -153,6 +153,7 @@ async function dash() {
   const dashboardPath = join(__dirname, '..', 'dashboard', 'index.html');
   const docsPath = join(__dirname, '..', 'dashboard', 'docs.html');
   const benchmarkPath = join(__dirname, '..', 'dashboard', 'benchmark.html');
+  const cheatsheetPath = join(__dirname, '..', 'dashboard', 'cheatsheet.html');
   app.get('/', (_req, res) => {
     res.sendFile(dashboardPath);
   });
@@ -165,6 +166,11 @@ async function dash() {
   // Serve benchmark showcase
   app.get('/benchmark', (_req, res) => {
     res.sendFile(benchmarkPath);
+  });
+
+  // Serve cheatsheet
+  app.get('/cheatsheet', (_req, res) => {
+    res.sendFile(cheatsheetPath);
   });
 
   // Benchmark results API

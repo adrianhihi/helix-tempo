@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helix Tempo — Judge Cheatsheet Additions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --amber:#f0a030;--green:#4ade80;--red:#f87171;--blue:#60a5fa;--purple:#a78bfa;--teal:#2dd4bf;
+    --bg:#0a0c10;--card:rgba(255,255,255,0.035);--border:rgba(255,255,255,0.07);
+    --text:#c8cad0;--dim:#5a5e6a;--bright:#eaecf0;
+    --mono:'JetBrains Mono',monospace;--sans:'Outfit',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;padding:40px 32px;max-width:860px;margin:0 auto}
+  h1{font-size:24px;font-weight:800;color:var(--amber);margin-bottom:8px;letter-spacing:-0.5px}
+  .subtitle{font-size:13px;color:var(--dim);margin-bottom:32px}
+  h2{font-size:16px;font-weight:700;color:var(--bright);margin:28px 0 14px;padding-top:16px;border-top:1px solid var(--border)}
+  .qa{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .qa-q{font-size:14px;font-weight:700;color:var(--bright);margin-bottom:4px;display:flex;align-items:flex-start;gap:8px}
+  .qa-tag{font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;flex-shrink:0;margin-top:2px}
+  .qa-tag.likely{background:rgba(248,113,113,0.12);color:var(--red)}
+  .qa-tag.medium{background:rgba(240,160,48,0.12);color:var(--amber)}
+  .qa-tag.deep{background:rgba(167,139,250,0.12);color:var(--purple)}
+  .qa-a{font-size:12px;color:var(--text);line-height:1.8;margin-top:8px;white-space:pre-line}
+  .qa-a b{color:var(--amber);font-weight:600}
+  .qa-a code{font-family:var(--mono);font-size:11px;color:var(--teal);background:rgba(255,255,255,0.04);padding:1px 4px;border-radius:3px}
+</style>
+</head>
+<body>
+
+<h1>Judge Cheatsheet — Additional Q&As</h1>
+<div class="subtitle">Prepared answers for likely judge questions about LLM Fallback, Evolution, and Failure Philosophies.</div>
+
+<h2>Technical Deep Dives</h2>
+
+<div class="qa">
+  <div class="qa-q"><span class="qa-tag likely">LIKELY</span>What if you encounter a failure type you've never seen before?</div>
+  <div class="qa-a">Three layers of defense. First, the error space is <b>bounded</b> — MPP defines 7 error codes, we added 3 Tempo-specific ones. That covers 95%+ of cases.
+
+For the remaining 5%: we have an <b>LLM Fallback path</b>. When Gene Map returns a miss, PCEC sends the full failure context — error code, message, wallet state, protocol context — to an LLM. The LLM generates repair candidates. We validate them in a sandbox before execution. If successful, the repair becomes a new Gene Capsule tagged with <code>source: 'llm'</code> and low initial confidence.
+
+Over time, LLM-generated Genes that keep working get <b>promoted to high confidence</b>. It's a trust ladder — PCEC Genes are trusted immediately, LLM Genes earn trust through production validation.</div>
+</div>
+
+<div class="qa">
+  <div class="qa-q"><span class="qa-tag medium">MEDIUM</span>Do Gene strategies go stale? What about protocol upgrades?</div>
+  <div class="qa-a">Two mechanisms. <b>Short-term:</b> LLM Fallback handles new error codes from protocol upgrades by generating new Genes on the fly.
+
+<b>Long-term:</b> we're building evolutionary parameter optimization. Each Gene has parameters — slippage tolerance, split count, wait time. These need different values under different market conditions. Evolution algorithms search the parameter space continuously, so Genes adapt to changing conditions automatically.
+
+The Gene Map isn't static — it's a <b>living knowledge base</b> that both grows (via LLM) and sharpens (via evolution).</div>
+</div>
+
+<div class="qa">
+  <div class="qa-q"><span class="qa-tag deep">DEEP</span>What's the difference between Helix "waiting" and just "giving up"?</div>
+  <div class="qa-a">Giving up means propagating the error and forgetting about it. <b>Intelligent wait</b> means: I recognize this failure can't be fixed on-chain right now — maybe an address is blacklisted — so I don't waste gas retrying. Instead, I set a <b>watcher on the policy state</b>. The moment the condition changes, I auto-resume.
+
+The Gene Capsule for a "wait" scenario stores: what we're waiting for, how to detect the change, and what to do when it happens. It's not giving up — it's <b>scheduled recovery with a trigger condition</b>.</div>
+</div>
+
+<div class="qa">
+  <div class="qa-q"><span class="qa-tag medium">MEDIUM</span>You mentioned four failure philosophies. Can you explain?</div>
+  <div class="qa-a">Sure. Most people think self-healing means retry. We have four modes:
+
+<b>1. Active Repair</b> — detect, generate candidates, score, execute. This is 70% of cases. Swap currency, renew session, refresh nonce.
+
+<b>2. Compliance Reroute</b> — regulatory block detected, find an alternative compliant path. Not a retry — a reroute.
+
+<b>3. Temporal Awareness</b> — the failure happened because conditions changed DURING execution. We detect the timing, not just the error. Phase 2.
+
+<b>4. Intelligent Wait</b> — some failures can't be fixed on-chain. We recognize this, stop trying, and set a watcher to auto-resume when conditions change. This is the one that separates us from every retry library.</div>
+</div>
+
+<h2>Business & Market</h2>
+
+<div class="qa">
+  <div class="qa-q"><span class="qa-tag deep">DEEP</span>How does the LLM Fallback affect your costs?</div>
+  <div class="qa-a">LLM calls only happen on Gene Map misses — which after the first few weeks of operation will be <b>extremely rare</b>, maybe 1-2% of failures. The other 98% are handled by cached Genes at zero LLM cost.
+
+And each LLM call creates a new Gene, so the same unknown failure <b>never triggers an LLM call twice</b>. The cost converges to near-zero over time. That's the Gene Map network effect applied to LLM costs.</div>
+</div>
+
+</body>
+</html>

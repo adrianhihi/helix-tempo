@@ -21,14 +21,14 @@ That's it. `safePay` has the identical signature to `myAgent.pay`, but now self-
 
 **P**erceive → **C**onstruct → **E**valuate → **C**ommit
 
-1. **Perceive** — Parse MPP 402 error, classify into one of 10 failure categories
+1. **Perceive** — Parse MPP 402 error, classify into one of 12 failure categories
 2. **Construct** — Generate 2-3 repair candidates with cost/speed estimates
 3. **Evaluate** — Score candidates (0-100), pick optimal strategy
 4. **Commit** — Execute the repair, retry the original payment, store a Gene Capsule
 
 Gene Capsules accumulate. When the same failure recurs → skip C+E → apply known fix instantly (**immune**).
 
-## 10 Failure Scenarios
+## 12 Failure Scenarios
 
 | # | Failure | Repair Strategy |
 |---|---------|----------------|
@@ -42,12 +42,14 @@ Gene Capsules accumulate. When the same failure recurs → skip C+E → apply kn
 | 8 | Compliance Block | Switch to unrestricted stablecoin |
 | 9 | Cascade Failure | Refund waterfall C→B→A |
 | 10 | Off-Ramp Failure | Switch off-ramp provider |
+| 11 | Token Pause | Switch to unpaused stablecoin |
+| 12 | Fee Sponsor Empty | Fallback to self-pay gas |
 
 ## Quick Start
 
 ```bash
 npm install
-npm run demo        # Run all 10 scenarios in terminal
+npm run demo        # Run all 12 scenarios in terminal
 npm run dash        # Open the Minecraft isometric lab dashboard
 npm run helix init  # Configure your project
 ```
@@ -69,7 +71,7 @@ src/
 │   ├── types.ts      # All TypeScript types
 │   ├── bus.ts        # SSE EventBus
 │   ├── gene-map.ts   # SQLite Gene Map
-│   ├── pcec.ts       # PCEC engine (10 failure handlers)
+│   ├── pcec.ts       # PCEC engine (12 failure handlers)
 │   └── index.ts      # wrap() entry point
 ├── cli/              # helix init/status/dash
 ├── dashboard/        # Isometric canvas lab

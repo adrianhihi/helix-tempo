@@ -158,14 +158,22 @@ const SCENARIOS = [
     name: '10. Off-Ramp Failure',
     error: makeError('offramp-failed', 'Bank transfer to IBAN DE89... failed: provider Moonpay returned error 503'),
   },
+  {
+    name: '11. Token Pause Mid-Transfer',
+    error: makeError('tip-403', 'TIP-20 token USDC paused by issuer — all transfers revert. Policy: compliance freeze'),
+  },
+  {
+    name: '12. Fee Sponsor Exhausted',
+    error: makeError('payment-insufficient', 'Fee sponsor account balance exhausted (0 USDC). Cannot pay gas on behalf of agent'),
+  },
 ];
 
 // ── Main ────────────────────────────────────────────────────────────
 
 async function main() {
   console.log(`\n${C.bold}${C.cyan}╔══════════════════════════════════════════════════════════════╗${C.reset}`);
-  console.log(`${C.bold}${C.cyan}║${C.reset}  ${C.bold}HELIX-TEMPO${C.reset} Self-Healing Payment Infrastructure Demo      ${C.bold}${C.cyan}║${C.reset}`);
-  console.log(`${C.bold}${C.cyan}║${C.reset}  ${C.dim}PCEC Engine × Gene Map × Tempo Blockchain${C.reset}                  ${C.bold}${C.cyan}║${C.reset}`);
+  console.log(`${C.bold}${C.cyan}║${C.reset}  ${C.bold}HELIX-TEMPO${C.reset} Self-Healing Payment Infrastructure Demo        ${C.bold}${C.cyan}║${C.reset}`);
+  console.log(`${C.bold}${C.cyan}║${C.reset}  ${C.dim}PCEC Engine × Gene Map × Tempo Blockchain${C.reset}                   ${C.bold}${C.cyan}║${C.reset}`);
   console.log(`${C.bold}${C.cyan}╚══════════════════════════════════════════════════════════════╝${C.reset}\n`);
 
   const geneMap = new GeneMap(':memory:');
@@ -174,8 +182,8 @@ async function main() {
   // Subscribe to events for terminal output
   const unsub = bus.subscribe(renderEvent);
 
-  // ── Phase 1: Run all 10 scenarios ──
-  console.log(`${C.bold}${C.yellow}━━━ Phase 1: First Encounter (10 Failure Scenarios) ━━━${C.reset}\n`);
+  // ── Phase 1: Run all 12 scenarios ──
+  console.log(`${C.bold}${C.yellow}━━━ Phase 1: First Encounter (12 Failure Scenarios) ━━━${C.reset}\n`);
 
   for (const scenario of SCENARIOS) {
     console.log(`\n${C.bold}${C.white}▸ ${scenario.name}${C.reset}`);
@@ -197,12 +205,12 @@ async function main() {
   // ── Summary ──
   const stats = engine.getStats();
   console.log(`\n\n${C.bold}${C.green}╔══════════════════════════════════════════════════════════════╗${C.reset}`);
-  console.log(`${C.bold}${C.green}║${C.reset}  ${C.bold}DEMO COMPLETE — Summary${C.reset}                                    ${C.bold}${C.green}║${C.reset}`);
+  console.log(`${C.bold}${C.green}║${C.reset}  ${C.bold}DEMO COMPLETE — Summary${C.reset}                                     ${C.bold}${C.green}║${C.reset}`);
   console.log(`${C.bold}${C.green}╠══════════════════════════════════════════════════════════════╣${C.reset}`);
-  console.log(`${C.bold}${C.green}║${C.reset}  Total Repairs:    ${C.bold}${stats.repairs}${C.reset}${' '.repeat(40 - String(stats.repairs).length)}${C.bold}${C.green}║${C.reset}`);
-  console.log(`${C.bold}${C.green}║${C.reset}  Immune Hits:      ${C.bold}${C.cyan}${stats.immuneHits}${C.reset}${' '.repeat(40 - String(stats.immuneHits).length)}${C.bold}${C.green}║${C.reset}`);
-  console.log(`${C.bold}${C.green}║${C.reset}  Revenue Saved:    ${C.bold}${C.yellow}$${stats.savedRevenue.toLocaleString()}${C.reset}${' '.repeat(40 - String('$' + stats.savedRevenue.toLocaleString()).length)}${C.bold}${C.green}║${C.reset}`);
-  console.log(`${C.bold}${C.green}║${C.reset}  Gene Capsules:    ${C.bold}${C.magenta}${stats.geneCount}${C.reset}${' '.repeat(40 - String(stats.geneCount).length)}${C.bold}${C.green}║${C.reset}`);
+  console.log(`${C.bold}${C.green}║${C.reset}  Total Repairs:    ${C.bold}${stats.repairs}${C.reset}${' '.repeat(40 - String(stats.repairs).length)}${C.bold}${C.green}  ║${C.reset}`);
+  console.log(`${C.bold}${C.green}║${C.reset}  Immune Hits:      ${C.bold}${C.cyan}${stats.immuneHits}${C.reset}${' '.repeat(40 - String(stats.immuneHits).length)}${C.bold}${C.green}  ║${C.reset}`);
+  console.log(`${C.bold}${C.green}║${C.reset}  Revenue Saved:    ${C.bold}${C.yellow}$${stats.savedRevenue.toLocaleString()}${C.reset}${' '.repeat(40 - String('$' + stats.savedRevenue.toLocaleString()).length)}${C.bold}${C.green}  ║${C.reset}`);
+  console.log(`${C.bold}${C.green}║${C.reset}  Gene Capsules:    ${C.bold}${C.magenta}${stats.geneCount}${C.reset}${' '.repeat(40 - String(stats.geneCount).length)}${C.bold}${C.green}  ║${C.reset}`);
   console.log(`${C.bold}${C.green}╚══════════════════════════════════════════════════════════════╝${C.reset}\n`);
 
   console.log(`${C.dim}Gene Map contents:${C.reset}`);

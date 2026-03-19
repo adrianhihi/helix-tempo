@@ -148,10 +148,10 @@
     font-family: var(--mono); font-size: 28px; font-weight: 700;
     margin-bottom: 6px;
   }
-  .pcec-card:nth-child(1) .letter { color: var(--red); }
-  .pcec-card:nth-child(2) .letter { color: var(--blue); }
-  .pcec-card:nth-child(3) .letter { color: var(--purple); }
-  .pcec-card:nth-child(4) .letter { color: var(--green); }
+  .pcec-card:nth-of-type(1) .letter { color: var(--red); }
+  .pcec-card:nth-of-type(2) .letter { color: var(--blue); }
+  .pcec-card:nth-of-type(3) .letter { color: var(--purple); }
+  .pcec-card:nth-of-type(4) .letter { color: var(--green); }
   .pcec-card h3 { font-size: 14px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
   .pcec-card p { font-size: 12px; color: var(--text-dim); }
   .pcec-arrow {
@@ -391,6 +391,235 @@
     .sa-cards { grid-template-columns: 1fr; }
     .sa-wrapper { padding-left: 0; }
     .sa-feedback, .sa-feedback-label, .sa-feedback-arrow { display: none; }
+    .phil-grid { grid-template-columns: 1fr 1fr; }
+    .evo-flow-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Four Philosophies ─────────── */
+  .phil-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .phil-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; border-top: 3px solid var(--border); transition: border-color .3s;
+  }
+  .phil-card:hover { border-color: rgba(255,255,255,0.12); }
+  .phil-card.c-green { border-top-color: var(--green); }
+  .phil-card.c-amber { border-top-color: var(--amber); }
+  .phil-card.c-purple { border-top-color: var(--purple); }
+  .phil-card.c-teal { border-top-color: var(--teal); }
+  .phil-icon { font-size: 24px; margin-bottom: 8px; }
+  .phil-card h3 { font-size: 15px; font-weight: 700; color: var(--text-bright); margin-bottom: 6px; }
+  .phil-card.c-green h3 { color: var(--green); }
+  .phil-card.c-amber h3 { color: var(--amber); }
+  .phil-card.c-purple h3 { color: var(--purple); }
+  .phil-card.c-teal h3 { color: var(--teal); }
+  .phil-card p { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 6px; }
+  .phil-examples { font-family: var(--mono); font-size: 10px; color: var(--text-dim); margin-top: 8px; }
+  .phil-examples b { color: var(--text); }
+  .phil-scenarios { font-family: var(--mono); font-size: 9px; color: var(--text-dim); margin-top: 4px; }
+  .phil-note { font-size: 10px; color: var(--amber); font-style: italic; margin-top: 6px; }
+  .phil-quote {
+    margin-top: 24px; padding: 16px 20px; border-radius: 8px;
+    background: rgba(240,160,48,0.04); border: 1px solid rgba(240,160,48,0.1);
+    font-size: 13px; color: var(--text-dim); font-style: italic; line-height: 1.7;
+    text-align: center;
+  }
+
+  /* ── Evolution Roadmap ─────────── */
+  .evo-timeline { position: relative; padding-left: 32px; }
+  .evo-stage {
+    position: relative; padding: 0 0 32px 24px;
+    border-left: 2px solid rgba(255,255,255,0.06);
+  }
+  .evo-stage:last-child { border-left-color: transparent; }
+  .evo-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--border); background: var(--bg);
+  }
+  .evo-stage.s-green .evo-dot { background: var(--green); border-color: var(--green); }
+  .evo-stage.s-amber .evo-dot { background: var(--amber); border-color: var(--amber); }
+  .evo-stage.s-purple .evo-dot { background: var(--purple); border-color: var(--purple); }
+  .evo-stage h3 { font-size: 16px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+  .evo-stage.s-green h3 { color: var(--green); }
+  .evo-stage.s-amber h3 { color: var(--amber); }
+  .evo-stage.s-purple h3 { color: var(--purple); }
+  .evo-badge-row { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
+  .evo-badge {
+    font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-dim);
+  }
+  .evo-desc { font-size: 13px; color: var(--text); line-height: 1.7; margin-bottom: 10px; }
+  .evo-tech { font-size: 11px; color: var(--text-dim); line-height: 1.7; margin-bottom: 6px; }
+  .evo-limit { font-size: 11px; color: rgba(248,113,113,0.7); line-height: 1.6; margin-bottom: 8px; }
+  .evo-flow {
+    background: #0c0e14; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--mono); font-size: 11px;
+    line-height: 1.8; color: var(--text-dim); margin: 10px 0;
+  }
+  .evo-flow .hl-green { color: var(--green); }
+  .evo-flow .hl-amber { color: var(--amber); }
+  .evo-flow .hl-purple { color: var(--purple); }
+  .evo-flow .hl-dim { color: #475569; }
+  .evo-insight {
+    padding: 12px 16px; border-radius: 8px; margin-top: 10px;
+    background: rgba(240,160,48,0.04); border: 1px solid rgba(240,160,48,0.1);
+    font-size: 12px; color: var(--text-dim); line-height: 1.7;
+  }
+  .evo-insight b { color: var(--amber); }
+  .evo-coda {
+    margin-top: 24px; padding: 16px 20px; border-radius: 8px;
+    background: rgba(167,139,250,0.04); border: 1px solid rgba(167,139,250,0.1);
+    font-size: 13px; color: var(--text-dim); line-height: 1.8;
+  }
+  .evo-coda b { color: var(--purple); }
+
+  /* ── Deep Spec Analysis ────────── */
+  .spec-summary {
+    font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+    padding: 12px 16px; border-radius: 8px; margin-bottom: 24px;
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  }
+  .spec-summary b { color: var(--text); }
+  .spec-row {
+    border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; background: var(--card);
+    border-left: 4px solid var(--border);
+  }
+  .spec-row.confirmed { border-left-color: var(--green); }
+  .spec-row.oral { border-left-color: var(--amber); }
+  .spec-row.excluded { border-left-color: #333; }
+  .spec-head {
+    padding: 12px 16px; cursor: pointer; display: flex;
+    align-items: center; gap: 10px; transition: background .15s;
+  }
+  .spec-head:hover { background: rgba(255,255,255,0.02); }
+  .spec-num { font-family: var(--mono); font-size: 11px; color: var(--text-dim); font-weight: 600; min-width: 26px; }
+  .spec-name { font-size: 13px; font-weight: 700; color: var(--text-bright); flex: 1; }
+  .spec-src { font-family: var(--mono); font-size: 9px; color: var(--text-dim); }
+  .spec-tag-ph2 { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: rgba(74,222,128,0.12); color: var(--green); }
+  .spec-tag-oral { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: rgba(240,160,48,0.12); color: var(--amber); }
+  .spec-tag-excl { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 10px; background: rgba(255,255,255,0.06); color: var(--text-dim); }
+  .spec-arrow { font-size: 12px; color: var(--text-dim); transition: transform .2s; }
+  .spec-row.open .spec-arrow { transform: rotate(90deg); }
+  .spec-detail {
+    max-height: 0; overflow: hidden; transition: max-height .4s ease;
+    padding: 0 16px;
+  }
+  .spec-row.open .spec-detail { max-height: 3000px; padding: 0 16px 16px; }
+  .spec-detail p { font-size: 12px; color: var(--text-dim); line-height: 1.7; margin-bottom: 8px; }
+  .spec-detail p b { color: var(--text); }
+  .spec-detail .spec-code {
+    background: #0c0e14; border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; font-family: var(--mono); font-size: 10.5px;
+    line-height: 1.7; color: var(--text-dim); margin: 8px 0; overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  .spec-detail .spec-code .hl { color: var(--amber); }
+  .spec-detail .spec-code .ok { color: var(--green); }
+  .spec-detail .spec-code .fail { color: var(--red); }
+  .spec-detail .spec-code .dim { color: #475569; }
+  .spec-detail .spec-code .purple { color: var(--purple); }
+  .spec-insight {
+    padding: 10px 14px; border-radius: 6px; margin: 10px 0;
+    border-left: 3px solid var(--amber); background: rgba(240,160,48,0.03);
+    font-size: 11px; color: var(--text-dim); line-height: 1.7;
+  }
+  .spec-insight b { color: var(--amber); }
+  .spec-dead { text-decoration: line-through; opacity: 0.5; }
+
+  /* ── HGP Section ───────────────── */
+  .hgp-tagline {
+    font-size: 16px; font-style: italic; color: var(--amber); line-height: 1.7;
+    max-width: 640px; margin: 0 auto 32px; text-align: center; opacity: 0.85;
+  }
+  .hgp-code {
+    background: #0c0e14; border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 20px; font-family: var(--mono); font-size: 11px;
+    line-height: 1.75; color: var(--text); overflow-x: auto; margin-bottom: 16px;
+    white-space: pre;
+  }
+  .hgp-code .cm { color: #475569; }
+  .hgp-code .kw { color: var(--purple); }
+  .hgp-code .tp { color: var(--teal); }
+  .hgp-code .st { color: var(--green); }
+  .hgp-code .hl { color: var(--amber); }
+  .hgp-annot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+  .hgp-annot-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; border-top: 3px solid var(--border);
+  }
+  .hgp-annot-card.c-blue { border-top-color: var(--blue); }
+  .hgp-annot-card.c-green { border-top-color: var(--green); }
+  .hgp-annot-card.c-amber { border-top-color: var(--amber); }
+  .hgp-annot-card.c-purple { border-top-color: var(--purple); }
+  .hgp-annot-card h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .hgp-annot-card.c-blue h4 { color: var(--blue); }
+  .hgp-annot-card.c-green h4 { color: var(--green); }
+  .hgp-annot-card.c-amber h4 { color: var(--amber); }
+  .hgp-annot-card.c-purple h4 { color: var(--purple); }
+  .hgp-annot-card p { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+  .hgp-layer {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 8px;
+  }
+  .hgp-layer h4 { font-family: var(--sans); font-size: 13px; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+  .hgp-layer p { font-size: 12px; color: var(--text-dim); line-height: 1.7; }
+  .hgp-layer .layer-quote { font-style: italic; color: var(--amber); font-size: 11px; margin-top: 6px; }
+  .hgp-arrow-down { text-align: center; padding: 4px 0; font-size: 14px; color: var(--text-dim); }
+  .hgp-cli {
+    background: #0a0e16; border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; font-family: var(--mono); font-size: 10.5px;
+    line-height: 1.8; color: #94a3b8; margin: 16px 0; overflow-x: auto;
+    white-space: pre;
+  }
+  .hgp-cli .prompt { color: var(--green); }
+  .hgp-cli .ok { color: var(--green); }
+  .hgp-cli .dim { color: #475569; }
+  .hgp-cli .hl { color: var(--amber); }
+  .hgp-token {
+    background: rgba(167,139,250,0.03); border: 1px solid rgba(167,139,250,0.12);
+    border-radius: 12px; padding: 20px; margin-top: 28px;
+  }
+  .hgp-token h3 { font-size: 16px; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+  .hgp-token-badges { display: flex; gap: 8px; margin-bottom: 14px; }
+  .hgp-flow-box {
+    background: #0c0e14; border: 1px solid rgba(167,139,250,0.15); border-radius: 8px;
+    padding: 16px 18px; font-family: var(--mono); font-size: 10.5px;
+    line-height: 1.8; color: var(--text-dim); margin: 12px 0; overflow-x: auto;
+    white-space: pre;
+  }
+  .hgp-util { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0; }
+  .hgp-util-card {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 14px;
+  }
+  .hgp-util-card h4 { font-size: 11px; font-weight: 700; color: var(--purple); margin-bottom: 4px; }
+  .hgp-util-card p { font-size: 10px; color: var(--text-dim); line-height: 1.6; }
+  .hgp-flywheel {
+    padding: 16px 20px; border-radius: 8px; margin-top: 16px;
+    background: rgba(167,139,250,0.04); border: 1px solid rgba(167,139,250,0.12);
+    font-size: 13px; color: var(--text-dim); line-height: 1.8; text-align: center;
+  }
+  .hgp-flywheel b { color: var(--purple); }
+  .hgp-vs { width: 100%; border-collapse: collapse; font-size: 11px; margin: 16px 0; }
+  .hgp-vs th {
+    text-align: left; padding: 8px 12px; font-weight: 600; font-size: 9px;
+    letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .hgp-vs td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .hgp-vs tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+  .hgp-vs .dim { color: var(--text-dim); }
+  .hgp-vs .hl { color: var(--green); font-weight: 500; }
+  .hgp-coda {
+    margin-top: 20px; padding: 16px 20px; border-radius: 8px;
+    background: rgba(240,160,48,0.04); border: 1px solid rgba(240,160,48,0.1);
+    font-size: 13px; color: var(--text-dim); line-height: 1.8; text-align: center;
+  }
+  .hgp-coda b { color: var(--amber); }
+  @media (max-width: 700px) {
+    .hgp-annot, .hgp-util { grid-template-columns: 1fr 1fr; }
   }
 </style>
 </head>
@@ -407,6 +636,7 @@
     <a href="#deep-dive">Deep Dive</a>
     <a href="#quickstart">Quickstart</a>
     <a href="#numbers">Numbers</a>
+    <a href="#hgp" style="color:var(--purple)">HGP</a>
     <a href="/" class="lab-btn">Open Lab &rarr;</a>
   </div>
 </nav>
@@ -480,7 +710,7 @@
       </div>
       <div class="pcec-arrow">&rarr;</div>
       <div class="pcec-card">
-        <div class="letter">K</div>
+        <div class="letter">C</div>
         <h3>Commit</h3>
         <p>Execute the repair. Retry the original payment. Store a Gene Capsule in the Gene Map.</p>
       </div>
@@ -495,7 +725,7 @@
 <section id="scenarios">
   <div class="fade-in">
     <h2>What Helix Fixes</h2>
-    <p class="section-sub">10 failure scenarios. 10 autonomous repair strategies.</p>
+    <p class="section-sub">12 failure scenarios in demo (20 analyzed: 3 Phase 2, 2 oral, 3 excluded with reasoning).</p>
     <table class="scenario-table">
       <thead>
         <tr><th>#</th><th>Failure</th><th>MPP Error</th><th>Helix Repair</th><th>Status</th></tr>
@@ -511,6 +741,8 @@
         <tr><td class="num">8</td><td class="name">Compliance Block</td><td class="err">tip-403</td><td class="fix">Switch to unrestricted stablecoin</td><td><span class="sc-tag mock">MOCK</span></td></tr>
         <tr><td class="num">9</td><td class="name">Cascade Failure</td><td class="err">cascade-failure</td><td class="fix">Refund waterfall C&rarr;B&rarr;A</td><td><span class="sc-tag vision">VISION</span></td></tr>
         <tr><td class="num">10</td><td class="name">Off-Ramp Failure</td><td class="err">offramp-failed</td><td class="fix">Switch off-ramp provider</td><td><span class="sc-tag vision">VISION</span></td></tr>
+        <tr><td class="num">11</td><td class="name">Token Pause</td><td class="err">token-paused</td><td class="fix">Switch to unpaused stablecoin</td><td><span class="sc-tag mock">MOCK</span></td></tr>
+        <tr><td class="num">12</td><td class="name">Fee Sponsor Empty</td><td class="err">sponsor-insufficient</td><td class="fix">Fallback to self-pay gas</td><td><span class="sc-tag mock">MOCK</span></td></tr>
       </tbody>
     </table>
   </div>
@@ -653,7 +885,7 @@
               <div class="sa-dt">Why</div>
               <p>PCEC Construct generates candidates FROM the skills library. Skills are the atoms of repair.</p>
               <div class="sa-dt">Helix Tempo</div>
-              <p><b>Fully implemented.</b> 10 failure categories &times; 2&ndash;3 strategies each = ~25 skills in <code>pcec.ts</code>. Each skill has cost estimate, speed estimate, and requirements list.</p>
+              <p><b>Fully implemented.</b> 12 failure categories &times; 2&ndash;3 strategies each = ~25 skills in <code>pcec.ts</code>. Each skill has cost estimate, speed estimate, and requirements list.</p>
             </div>
           </div>
           <div class="sa-card" onclick="this.classList.toggle('open')">
@@ -704,7 +936,7 @@
               <div class="sa-dt">Why</div>
               <p>This is what makes Helix different. It doesn&rsquo;t just retry &mdash; it <b>understands what broke</b> and picks the optimal fix.</p>
               <div class="sa-dt">Helix Tempo</div>
-              <p><b>Fully implemented.</b> <code>src/core/pcec.ts</code> &mdash; complete P/C/E/K loop with all 10 failure handlers. Proven by HumanEval benchmark: <b>68% &rarr; 90%</b>. Perceive parses MPP 402 errors (RFC 9457). Evaluate scores by speed (30pts), cost, requirements, severity matching.</p>
+              <p><b>Fully implemented.</b> <code>src/core/pcec.ts</code> &mdash; complete P/C/E/K loop with all 12 failure handlers. Proven by HumanEval benchmark: <b>68% &rarr; 90%</b>. Perceive parses MPP 402 errors (RFC 9457). Evaluate scores by speed (30pts), cost, requirements, severity matching.</p>
             </div>
           </div>
           <div class="sa-card" onclick="this.classList.toggle('open')">
@@ -897,6 +1129,561 @@
   </div>
 </section>
 
+<!-- ═══════════ FOUR FAILURE PHILOSOPHIES ═══════════ -->
+<section id="philosophies">
+  <div class="fade-in">
+    <h2>Four Failure Philosophies</h2>
+    <p class="section-sub">Helix doesn't just retry. It understands what kind of failure it's facing.</p>
+    <div class="phil-grid">
+      <div class="phil-card c-green">
+        <div class="phil-icon">&#128295;</div>
+        <h3>Active Repair</h3>
+        <p>Detect &rarr; generate candidates &rarr; score &rarr; execute the best fix &rarr; retry</p>
+        <div class="phil-examples"><b>Examples:</b> Swap currency, renew session, refresh nonce, split swap</div>
+        <div class="phil-scenarios">Scenarios #1&ndash;7</div>
+      </div>
+      <div class="phil-card c-amber">
+        <div class="phil-icon">&#128737;&#65039;</div>
+        <h3>Compliance Reroute</h3>
+        <p>Regulatory block detected &rarr; find an alternative compliant path &rarr; reroute</p>
+        <div class="phil-examples"><b>Examples:</b> Switch stablecoin to avoid KYC restriction, route via compliant wallet</div>
+        <div class="phil-scenarios">Scenario #8</div>
+      </div>
+      <div class="phil-card c-purple">
+        <div class="phil-icon">&#9201;&#65039;</div>
+        <h3>Temporal Awareness</h3>
+        <p>Policy changed mid-flight &rarr; detect the timing of the change &rarr; rebuild tx under new rules</p>
+        <div class="phil-examples"><b>Examples:</b> TIP-403 policy updated between blocks, tx reverted after gas spent &rarr; query new policy, resubmit</div>
+        <div class="phil-scenarios">Phase 2</div>
+        <div class="phil-note">Not just &ldquo;what failed&rdquo; but &ldquo;when it failed relative to what changed&rdquo;</div>
+      </div>
+      <div class="phil-card c-teal">
+        <div class="phil-icon">&#129482;</div>
+        <h3>Intelligent Wait</h3>
+        <p>Failure detected as unresolvable on-chain &rarr; don't waste gas retrying &rarr; monitor and auto-resume when conditions change</p>
+        <div class="phil-examples"><b>Examples:</b> Reward claim blocked by blacklist &rarr; wait for policy review &rarr; auto-claim when cleared</div>
+        <div class="phil-scenarios">Phase 2</div>
+        <div class="phil-note">Knowing when NOT to act is the mark of a mature system</div>
+      </div>
+    </div>
+    <div class="phil-quote">&ldquo;Most self-healing systems only know how to retry. Helix knows how to repair, reroute, wait, and evolve. That's the difference between a retry wrapper and an operating system.&rdquo;</div>
+  </div>
+</section>
+
+<!-- ═══════════ EVOLUTION ROADMAP ═══════════ -->
+<section id="evolution">
+  <div class="fade-in">
+    <h2>Evolution Roadmap</h2>
+    <p class="section-sub">How Helix grows from a repair engine to an adaptive intelligence.</p>
+
+    <div class="evo-timeline">
+
+      <!-- Stage 1 -->
+      <div class="evo-stage s-green">
+        <div class="evo-dot"></div>
+        <h3>Deterministic PCEC + Gene Map</h3>
+        <div class="evo-badge-row">
+          <span class="evo-badge" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.2);color:var(--green)">CURRENT</span>
+          <span class="evo-badge">HACKATHON DEMO</span>
+        </div>
+        <div class="evo-desc">Fixed repair strategies for known failure patterns. Every repair stored as Gene Capsule. 12 failure types, ~25 strategies, 9 immune hits in benchmark.</div>
+        <div class="evo-tech">Bounded error space (7 MPP codes + 3 Tempo-specific). Evaluate scores by speed/cost/requirements/successProbability. Gene Map in SQLite with WAL mode.</div>
+        <div class="evo-limit">Limitation: Can only handle failures it's been programmed for. Unknown error codes &rarr; fallback to human.</div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="evo-stage s-amber">
+        <div class="evo-dot"></div>
+        <h3>LLM Fallback for Unknown Failures</h3>
+        <div class="evo-badge-row">
+          <span class="evo-badge" style="background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.2);color:var(--amber)">NEXT</span>
+          <span class="evo-badge">Q2 2026</span>
+        </div>
+        <div class="evo-desc">When Gene Map has no match, PCEC sends the full failure context to an LLM. The LLM generates repair candidates. Candidates are validated in a sandbox before execution. Successful repairs are written back to Gene Map &mdash; tagged with <code style="color:var(--amber)">source: 'llm'</code> and low initial confidence.</div>
+        <div class="evo-flow">
+<span class="hl-dim">Unknown failure</span>
+  &rarr; Gene Map lookup: <span class="hl-amber">MISS</span>
+  &rarr; Send to LLM: <span class="hl-dim">{ errorCode, message, wallet state, protocol context }</span>
+  &rarr; LLM returns: <span class="hl-amber">2&ndash;3 repair candidates with reasoning</span>
+  &rarr; Sandbox validation: <span class="hl-dim">test each candidate against constraints</span>
+  &rarr; Execute best candidate
+  &rarr; Success &rarr; Store Gene Capsule <span class="hl-green">{ source: 'llm', confidence: 0.6 }</span>
+  &rarr; Confidence increases with each successful reuse</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-family:var(--mono);font-size:11px;line-height:1.7;color:var(--text);margin:10px 0;overflow-x:auto"><span style="color:var(--purple)">interface</span> GeneCapsule {
+  <span style="color:#475569">// existing fields...</span>
+  source: <span style="color:var(--green)">'pcec'</span> | <span style="color:var(--green)">'llm'</span> | <span style="color:var(--green)">'human'</span> | <span style="color:var(--green)">'community'</span>;
+  confidence: <span style="color:var(--teal)">number</span>;  <span style="color:#475569">// 0-1, starts low for LLM, increases with use</span>
+}</pre>
+        <div class="evo-insight"><b>Key insight:</b> LLM-generated Genes enter the same Gene Map as PCEC Genes, but with lower initial trust. As they're validated by real production usage, confidence rises naturally. This is how the system absorbs new knowledge without compromising reliability.</div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="evo-stage s-purple">
+        <div class="evo-dot"></div>
+        <h3>Evolutionary Parameter Optimization</h3>
+        <div class="evo-badge-row">
+          <span class="evo-badge" style="background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.2);color:var(--purple)">VISION</span>
+          <span class="evo-badge">Q3&ndash;Q4 2026</span>
+        </div>
+        <div class="evo-desc">Gene strategies have parameters &mdash; slippage tolerance, split count, wait time. These parameters need different optimal values under different market conditions. Evolution algorithms search the parameter space, finding optimal configurations per context.</div>
+        <div class="evo-flow">
+Gene: <span class="hl-amber">swap_currency</span>
+Parameter space:
+  slippage:   <span class="hl-green">[0.5%, 1%, 2%, 3%]</span>
+  splitCount: <span class="hl-green">[1, 2, 3, 5]</span>
+  maxWaitMs:  <span class="hl-green">[500, 1000, 2000, 5000]</span>
+
+Evolution maintains a <span class="hl-purple">population</span> of parameter combinations
+Successful combinations &rarr; <span class="hl-green">higher fitness</span> &rarr; survive
+Failed combinations &rarr; <span class="hl-dim">eliminated</span>
+Periodic mutations &rarr; <span class="hl-amber">explore new configurations</span>
+
+Result: Each Gene <span class="hl-purple">adapts to its environment</span> automatically</div>
+        <div class="evo-insight"><b>Key insight:</b> Evolution doesn't create new strategies &mdash; it tunes existing ones. The LLM creates new Genes. Evolution makes them better over time. Together: the system both discovers and optimizes.</div>
+      </div>
+
+    </div><!-- /evo-timeline -->
+
+    <div class="evo-coda">
+      <b>This architecture answers two questions judges always ask:</b><br>
+      1. &ldquo;What if you encounter an unknown failure?&rdquo; &rarr; LLM Fallback generates and validates new Genes<br>
+      2. &ldquo;Do Gene strategies go stale?&rdquo; &rarr; Evolution continuously optimizes parameters against real conditions
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ GENE REGISTRY ═══════════ -->
+<section id="gene-registry">
+  <div class="fade-in">
+    <h2>Open Gene Registry</h2>
+    <p class="section-sub">Every agent's repair makes every other agent smarter.</p>
+    <div class="evo-timeline">
+      <div class="evo-stage s-green">
+        <div class="evo-dot"></div>
+        <h3>Local Gene Map</h3>
+        <div class="evo-badge-row"><span class="evo-badge" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.2);color:var(--green)">CURRENT</span></div>
+        <div class="evo-desc">Each agent stores its own repair history in local SQLite. Gene Capsules record: what failed, how it was fixed, and how fast.</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--text);margin:8px 0"><span style="color:var(--amber)">helix gene list</span> <span style="color:#475569">→ shows all local genes</span></pre>
+      </div>
+      <div class="evo-stage s-amber">
+        <div class="evo-dot"></div>
+        <h3>Community Gene Registry</h3>
+        <div class="evo-badge-row"><span class="evo-badge" style="background:rgba(240,160,48,0.1);border-color:rgba(240,160,48,0.2);color:var(--amber)">Q2 2026</span></div>
+        <div class="evo-desc">Agents push successful Gene Capsules to a shared registry. Other agents pull proven fixes. Like npm for payment reliability.</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--text);margin:8px 0"><span style="color:var(--amber)">helix gene push</span> balance&rarr;swap  |  <span style="color:var(--amber)">helix gene pull</span> --popular</pre>
+        <div class="evo-insight">Fix one failure &rarr; every agent on the network is immune.</div>
+      </div>
+      <div class="evo-stage s-purple">
+        <div class="evo-dot"></div>
+        <h3>On-Chain Gene Economy</h3>
+        <div class="evo-badge-row"><span class="evo-badge" style="background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.2);color:var(--purple)">Q3 2026</span></div>
+        <div class="evo-desc">Gene Capsules go on-chain via Tempo. Contributors earn micropayments (via MPP sessions) every time their gene is used. Reputation scoring ensures quality.</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--text);margin:8px 0"><span style="color:var(--amber)">helix gene publish</span> --on-chain  <span style="color:#475569">&rarr; earns 0.001 USDC per use</span></pre>
+        <div class="evo-insight">Open-source incentivized by the protocol itself.</div>
+      </div>
+    </div>
+    <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:8px;padding:16px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--text);margin:20px 0;overflow-x:auto"><span style="color:var(--purple)">interface</span> GeneCapsule {
+  failureCode: <span style="color:var(--teal)">string</span>;
+  category: <span style="color:var(--teal)">string</span>;
+  strategy: <span style="color:var(--teal)">string</span>;
+  params: Record&lt;<span style="color:var(--teal)">string</span>, <span style="color:var(--teal)">any</span>&gt;;
+  successCount: <span style="color:var(--teal)">number</span>;
+  avgRepairMs: <span style="color:var(--teal)">number</span>;
+
+  <span style="color:#475569">// Source tracking for trust levels</span>
+  source: <span style="color:var(--green)">'pcec'</span> | <span style="color:var(--green)">'llm'</span> | <span style="color:var(--green)">'human'</span> | <span style="color:var(--green)">'community'</span>;
+  confidence: <span style="color:var(--teal)">number</span>;  <span style="color:#475569">// 0-1, starts low for LLM/community</span>
+
+  <span style="color:#475569">// Registry metadata</span>
+  author?: <span style="color:var(--teal)">string</span>;        <span style="color:#475569">// agent address that created this gene</span>
+  usageCount?: <span style="color:var(--teal)">number</span>;    <span style="color:#475569">// total times used across all agents</span>
+  reputation?: <span style="color:var(--teal)">number</span>;    <span style="color:#475569">// community rating 0-5</span>
+}</pre>
+    <p style="font-size:12px;color:var(--text-dim);text-align:center;margin-top:8px"><b style="color:var(--green)">PCEC genes</b> start at confidence 1.0. <b style="color:var(--amber)">LLM-generated genes</b> start at 0.6. <b style="color:var(--purple)">Community genes</b> start at 0.7. Confidence rises with each successful use.</p>
+  </div>
+</section>
+
+<!-- ═══════════ LLM FALLBACK ═══════════ -->
+<section id="llm-fallback">
+  <div class="fade-in">
+    <h2>LLM Fallback for Unknown Failures</h2>
+    <p class="section-sub">When the Gene Map doesn't have an answer, AI generates one.</p>
+    <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap;margin-bottom:20px">
+      <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.12);border-radius:8px 0 0 8px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--red)">Unknown<br>Error</div>
+      <div style="display:flex;align-items:center;color:var(--text-dim);padding:0 4px">&rarr;</div>
+      <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(240,160,48,0.05);border:1px solid rgba(240,160,48,0.12);text-align:center;font-family:var(--mono);font-size:11px;color:var(--amber)">Gene Map<br>MISS</div>
+      <div style="display:flex;align-items:center;color:var(--text-dim);padding:0 4px">&rarr;</div>
+      <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.12);text-align:center;font-family:var(--mono);font-size:11px;color:var(--blue)">Send to<br>LLM</div>
+      <div style="display:flex;align-items:center;color:var(--text-dim);padding:0 4px">&rarr;</div>
+      <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(167,139,250,0.05);border:1px solid rgba(167,139,250,0.12);text-align:center;font-family:var(--mono);font-size:11px;color:var(--purple)">Sandbox<br>Validate</div>
+      <div style="display:flex;align-items:center;color:var(--text-dim);padding:0 4px">&rarr;</div>
+      <div style="flex:1;min-width:100px;padding:12px 16px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.12);border-radius:0 8px 8px 0;text-align:center;font-family:var(--mono);font-size:11px;color:var(--green)">Store as<br>New Gene</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+        <div style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;letter-spacing:1px">WHAT GETS SENT TO THE LLM</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--mono);font-size:10px;line-height:1.7;color:var(--text);margin:0;overflow-x:auto">{
+  errorCode: <span style="color:var(--red)">"unknown-error-xyz"</span>,
+  fullMessage: <span style="color:var(--red)">"Transaction reverted: reason unknown"</span>,
+  walletState: { balance: <span style="color:var(--green)">"1200 USDC"</span>, nonce: 42 },
+  protocolContext: <span style="color:var(--green)">"Tempo mainnet, TIP-20, block #4829301"</span>,
+  previousAttempts: [<span style="color:var(--red)">"retry_failed"</span>]
+}</pre>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px">
+        <div style="font-family:var(--sans);font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:8px;letter-spacing:1px">WHAT COMES BACK</div>
+        <pre style="background:#0c0e14;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-family:var(--mono);font-size:10px;line-height:1.7;color:var(--text);margin:0;overflow-x:auto">[
+  { strategy: <span style="color:var(--green)">"increase_gas_limit"</span>,
+    confidence: <span style="color:var(--amber)">0.7</span> },
+  { strategy: <span style="color:var(--green)">"switch_rpc_endpoint"</span>,
+    confidence: <span style="color:var(--amber)">0.5</span> },
+  { strategy: <span style="color:var(--green)">"wait_and_retry"</span>,
+    confidence: <span style="color:var(--amber)">0.3</span> }
+]</pre>
+      </div>
+    </div>
+    <div class="evo-insight" style="margin-top:16px"><b>Key insight:</b> Each LLM call costs ~$0.01 and takes ~2 seconds. But it only happens ONCE per unknown failure type. After that, the result is a Gene Capsule &mdash; every future occurrence is handled instantly at zero cost. The LLM call rate converges to near-zero over time.</div>
+  </div>
+</section>
+
+<!-- ═══════════ DEEP SPEC ANALYSIS ═══════════ -->
+<section id="deep-spec">
+  <div class="fade-in">
+    <h2>Deep Spec Analysis &mdash; Additional Failure Scenarios</h2>
+    <p class="section-sub">Edge cases identified from TIP-20, TIP-403, Fee AMM, and Tempo Transactions specifications.</p>
+
+    <div class="spec-summary"><b>20</b> total scenarios analyzed. <b>12</b> in demo. <b>3</b> Phase 2. <b>2</b> oral mention. <b>3</b> excluded with documented reasoning.</div>
+
+    <!-- #13 Fee AMM -->
+    <div class="spec-row confirmed" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">#13</span>
+        <span class="spec-name">Fee AMM Liquidity Gap</span>
+        <span class="spec-src">Fee AMM Spec</span>
+        <span class="spec-tag-ph2">PHASE 2</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>Problem:</b> Agent uses EURC to pay gas. Fee AMM converts EURC&rarr;AlphaUSD (validator's preferred token). But if the EURC&rarr;AlphaUSD pool has zero reserves, the fee conversion fails and the entire transaction cannot be submitted.</p>
+        <p><b>Why this is tricky (chicken-and-egg):</b> The naive fix is &ldquo;swap to a stablecoin that has Fee AMM liquidity.&rdquo; But if Fee AMM has no liquidity for your current token, you can't even pay gas to execute the swap. You're stuck.</p>
+        <div class="spec-code"><span class="hl">Perceive:</span> fee-conversion-failed
+  EURC&rarr;AlphaUSD Fee AMM pool reserves = 0
+
+<span class="hl">Construct:</span>
+  <span class="ok">Candidate 1: Use fee sponsorship to bootstrap</span>
+    &rarr; Find sponsor that pays gas in AlphaUSD
+    &rarr; Submit DEX swap using sponsored gas
+    Score: 88
+
+  <span class="ok">Candidate 2: Switch to AlphaUSD (guaranteed liquidity)</span>
+    &rarr; AlphaUSD IS the target &mdash; no conversion needed
+    Score: 95 (if AlphaUSD balance > 0)
+
+  <span class="ok">Candidate 3: Use different fee token with active pool</span>
+    &rarr; Query Fee AMM for all pools with reserves > 0
+    Score: 82
+
+<span class="hl">Gene:</span> Map of active Fee AMM pools with reserve levels
+  &rarr; Pre-check pool liquidity before choosing fee token</div>
+        <div class="spec-insight"><b>Pitch note:</b> &ldquo;This is a Tempo-unique failure. Other chains use native gas tokens. Tempo's stablecoin-native fee system is elegant but creates this edge case. Helix handles it.&rdquo;</div>
+      </div>
+    </div>
+
+    <!-- #18 TIP-403 Mid-Flight -->
+    <div class="spec-row confirmed" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">#18</span>
+        <span class="spec-name">TIP-403 Mid-Flight Policy Change</span>
+        <span class="spec-src">TIP-403 Registry</span>
+        <span class="spec-tag-ph2">PHASE 2</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>How this differs from #8:</b> Scenario #8 = STATIC block (error before tx). Scenario #18 = DYNAMIC change. Policy changes DURING block confirmation, tx reverts mid-flight. Gas already consumed.</p>
+        <div class="spec-code"><span class="hl">Perceive:</span> policy-changed-mid-flight
+  tx 0xABC... submitted to mempool
+  TIP-403 policyId changed 5 &rarr; 7 between blocks #4829301 and #4829302
+  New policy blacklisted agent &mdash; tx reverted, gas consumed
+
+<span class="hl">Construct:</span>
+  <span class="ok">Candidate 1: Query new policy &rarr; find compliant path &rarr; retry</span>
+    &rarr; Read policyId 7, find authorized intermediary
+    &rarr; Route payment through compliant path
+    Score: 88
+
+  <span class="ok">Candidate 2: Store intent &rarr; monitor &rarr; auto-retry</span>
+    &rarr; Set watcher on TIP403Registry.PolicyUpdated
+    &rarr; Auto-resubmit when agent re-authorized
+    Score: 65
+
+<span class="hl">Gene:</span> <span class="purple">UNIQUE data that #8's Gene cannot store:</span>
+  &bull; Policy change block range
+  &bull; Token + jurisdiction combination
+  &bull; Time-of-day pattern for policy changes
+  &rarr; <span class="purple">PREDICTIVE:</span> Pre-warn before revert happens</div>
+        <div class="spec-insight"><b>Pitch note:</b> &ldquo;#8 catches policy blocks you can see coming. #18 catches changes that happen while your tx is in flight. It's a red light vs. a light that turns red while you're in the intersection. Helix handles both.&rdquo;</div>
+      </div>
+    </div>
+
+    <!-- #20 Reward Claim Blocked -->
+    <div class="spec-row confirmed" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">#20</span>
+        <span class="spec-name">Reward Claim Blocked by Policy</span>
+        <span class="spec-src">TIP-20 Rewards + TIP-403</span>
+        <span class="spec-tag-ph2">PHASE 2</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>Problem:</b> TIP-20 reward operations (distributeReward, claimRewards) ALL perform TIP-403 checks. A blacklisted address cannot claim accumulated rewards.</p>
+        <p><b>Dead-end analysis:</b></p>
+        <div class="spec-code"><span class="fail spec-dead">&#10007; Candidate 1: setRewardRecipient() to change to non-blacklisted address</span>
+   <span class="dim">&rarr; This tx ITSELF requires TIP-403 authorization</span>
+   <span class="dim">&rarr; Blacklisted address can't execute it &mdash; DEAD END</span>
+
+<span class="fail spec-dead">&#10007; Candidate 2: Ask operator for whitelist exemption</span>
+   <span class="dim">&rarr; Requires human-in-the-loop &mdash; too slow</span>
+
+<span class="ok">&#10003; Candidate 3: Intelligent Wait &larr; CORRECT PATH</span>
+   &rarr; Do NOT execute claim (save gas)
+   &rarr; Set EventWatcher on TIP403Registry for policyId changes
+   &rarr; Monitor: is address removed from blacklist?
+   &rarr; When removed &rarr; auto-trigger claimRewards()
+   Score: 92
+
+<span class="hl">Gene:</span> Record:
+  &bull; Address blacklist status
+  &bull; Policy review cycle estimate (from historical data)
+  &bull; Pending reward amount
+  &rarr; Next time: skip claim attempt entirely &mdash; no wasted gas</div>
+        <div class="spec-insight"><b>Strongest &ldquo;Intelligent Wait&rdquo; example:</b> &ldquo;Most systems would retry and burn gas every time. Helix recognizes this failure CANNOT be fixed on-chain. The correct action is no action &mdash; monitor and wait. That's the difference between a retry loop and an intelligent system.&rdquo;</div>
+      </div>
+    </div>
+
+    <!-- #12 InvalidRecipient -->
+    <div class="spec-row oral" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">#12b</span>
+        <span class="spec-name">InvalidRecipient Address Error</span>
+        <span class="spec-src">TIP-20 validRecipient</span>
+        <span class="spec-tag-oral">ORAL</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>Problem:</b> TIP-20 tokens cannot be sent to other TIP-20 contract addresses (prefix 0x20c000...). Reverts with <code>InvalidRecipient</code>. Prevents permanent token loss.</p>
+        <p><b>Why auto-fix is impossible:</b> Helix does NOT know the &ldquo;correct&rdquo; address. This requires external input.</p>
+        <div class="spec-code"><span class="hl">Construct:</span>
+  <span class="ok">Candidate 1: Abort + notify with detailed error</span>
+    &rarr; "Recipient is a TIP-20 contract, not a user address"
+    Score: 90 (only viable option)
+
+  <span class="fail spec-dead">Candidate 2: Auto-resolve correct address &mdash; IMPOSSIBLE</span>
+
+<span class="hl">Gene:</span> Mark address as CONTRACT_ADDRESS
+  &rarr; Pre-flight check catches it BEFORE submitting tx
+  &rarr; Saves gas by preventing known-bad transactions</div>
+        <div class="spec-insight"><b>Key insight:</b> Not every failure should be auto-repaired. Helix knows the difference between &ldquo;wrong currency&rdquo; (fixable) and &ldquo;wrong address&rdquo; (needs human). The Gene Map still prevents the same mistake from costing gas twice.</div>
+      </div>
+    </div>
+
+    <!-- #19 Memo Overflow -->
+    <div class="spec-row oral" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">#19</span>
+        <span class="spec-name">Memo Overflow (32-byte limit)</span>
+        <span class="spec-src">TIP-20 Memo Field</span>
+        <span class="spec-tag-oral">ORAL</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>Problem:</b> TIP-20 transfers support a 32-byte memo. If an agent attaches a longer memo, the transfer reverts.</p>
+        <div class="spec-code"><span class="hl">Construct:</span>
+  <span class="ok">Candidate 1: Hash memo &rarr; store full text off-chain</span>
+    &rarr; SHA256(full_memo)[0:32] as on-chain memo
+    &rarr; Store { hash &rarr; full_memo } in local DB
+    Score: 94
+
+  Candidate 2: Truncate to 32 bytes &mdash; loses information
+    Score: 45
+
+<span class="hl">Gene:</span> Auto-detect long memos and pre-hash before submission
+  &rarr; Prevents the revert entirely on future calls</div>
+      </div>
+    </div>
+
+    <!-- Excluded section -->
+    <div class="spec-row excluded" onclick="this.classList.toggle('open')">
+      <div class="spec-head">
+        <span class="spec-num">&mdash;</span>
+        <span class="spec-name">Excluded Scenarios (3)</span>
+        <span class="spec-src">Analyzed &amp; rejected</span>
+        <span class="spec-tag-excl">EXCLUDED</span>
+        <span class="spec-arrow">&rsaquo;</span>
+      </div>
+      <div class="spec-detail">
+        <p><b>#14 DEX Crossed Order</b> &mdash; Historical bug fixed by TIP-1002. No longer occurs on current Tempo mainnet. Using a fixed bug undermines credibility.</p>
+        <p><b>#15 DEX Rounding Loss</b> &mdash; Silent error: no revert, no error signal. Agent receives slightly less tokens. PCEC requires an explicit error to trigger. Would need proactive reconciliation (different architectural pattern).</p>
+        <p><b>#16 Scheduled Payment Window Expired</b> &mdash; Time window expiry implies business-level semantic change. Helix lacks business context to determine if re-scheduling is appropriate. Requires human-in-the-loop.</p>
+        <div class="spec-insight"><b>Why we document exclusions:</b> Showing what we rejected &mdash; and why &mdash; demonstrates deeper technical rigor than just listing everything.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════ HELIX GENE PROTOCOL ═══════════ -->
+<section id="hgp" style="max-width:1060px">
+  <div class="fade-in">
+    <h2>Helix Gene Protocol (HGP)</h2>
+    <p class="section-sub">A chain-verified knowledge protocol for payment failure repair.</p>
+    <div class="hgp-tagline">&ldquo;Every Helix repair writes a Gene. When enough agents run Helix, no payment failure needs to be solved twice. HGP is the immune system for payment agents.&rdquo;</div>
+
+    <!-- Part 1: What is an HGP Gene -->
+    <h3 style="font-size:16px;font-weight:700;color:var(--text-bright);margin-bottom:12px">What is an HGP Gene?</h3>
+    <div class="hgp-code"><span class="kw">interface</span> HelixGene {
+  id: <span class="tp">string</span>;                    <span class="cm">// sha256(errorCode + context + strategy)</span>
+
+  <span class="cm">// ── Failure Context (what broke and why) ──────────</span>
+  failure: {
+    errorCode: <span class="tp">MppErrorCode</span>;     <span class="cm">// payment-insufficient, verification-failed, ...</span>
+    chain: <span class="st">'tempo'</span> | <span class="st">'base'</span> | <span class="st">'solana'</span>;
+    tokenIn: <span class="tp">string</span>;             <span class="cm">// what the agent held (EURC)</span>
+    tokenRequired: <span class="tp">string</span>;       <span class="cm">// what was needed (USDC)</span>
+    amountDelta: <span class="tp">number</span>;         <span class="cm">// shortfall amount</span>
+    sessionState: <span class="st">'fresh'</span> | <span class="st">'expired'</span> | <span class="st">'corrupted'</span>;
+  };
+
+  <span class="cm">// ── Repair Path (how PCEC fixed it) ───────────────</span>
+  repair: {
+    strategy: <span class="tp">RepairStrategy</span>;    <span class="cm">// swap | topup | refresh | fallback | wait</span>
+    stepsExecuted: <span class="tp">Step</span>[];       <span class="cm">// complete execution trace</span>
+    timeToResolve: <span class="tp">number</span>;       <span class="cm">// milliseconds</span>
+    costIncurred: <span class="tp">number</span>;        <span class="cm">// gas + swap fees in USD</span>
+    successRate: <span class="tp">number</span>;         <span class="cm">// lifetime success rate (0-1)</span>
+  };
+
+  <span class="cm">// ── On-Chain Proof (verifiable on Tempo) ──────────</span>
+  proof: {
+    txHash: <span class="tp">string</span>;              <span class="cm">// the actual repair transaction</span>
+    blockHeight: <span class="tp">number</span>;
+    validatedAt: <span class="tp">number</span>;         <span class="cm">// unix timestamp</span>
+  };
+
+  <span class="cm">// ── Applicability Bounds ──────────────────────────</span>
+  applicability: {
+    minBalance: <span class="tp">number</span>;          <span class="cm">// works when balance >= this</span>
+    maxBalance: <span class="tp">number</span>;          <span class="cm">// tested up to this amount</span>
+    supportedChains: <span class="tp">string</span>[];
+    protocolVersion: <span class="tp">string</span>;     <span class="cm">// e.g. "tempo-v1.2"</span>
+    expiresAt: <span class="tp">number</span>;           <span class="cm">// protocol upgrades may invalidate</span>
+  };
+}</div>
+
+    <div class="hgp-annot">
+      <div class="hgp-annot-card c-blue"><h4>Failure Context</h4><p>Records EXACT conditions &mdash; not just the error code, but token pair, shortfall amount, session state. Two &lsquo;payment-insufficient&rsquo; errors with different token pairs need different fixes.</p></div>
+      <div class="hgp-annot-card c-green"><h4>Repair Path</h4><p>Complete execution trace from PCEC&rsquo;s Commit phase. Strategy, steps, timing, cost, and lifetime success rate. A new agent knows exactly what will happen.</p></div>
+      <div class="hgp-annot-card c-amber"><h4>On-Chain Proof</h4><p>Every Gene is anchored to a real Tempo transaction. Verify on-chain that this repair actually happened. Cryptographically proven repair knowledge.</p></div>
+      <div class="hgp-annot-card c-purple"><h4>Applicability Bounds</h4><p>Genes work within specific balance ranges, chains, and protocol versions. Stale Genes auto-expire via <code style="color:var(--purple)">expiresAt</code>. The protocol is self-cleaning.</p></div>
+    </div>
+
+    <!-- Part 2: Three-Layer Architecture -->
+    <h3 style="font-size:16px;font-weight:700;color:var(--text-bright);margin:28px 0 12px">Three-Layer Protocol Architecture</h3>
+
+    <div class="hgp-layer" style="border-color:rgba(167,139,250,0.2)">
+      <h4 style="color:var(--purple)">Layer 3: Gene Inheritance (new agent cold start)</h4>
+      <p>New Helix instance comes online &rarr; queries HGP Network for its chain + token config &rarr; downloads top-rated Genes for each error category &rarr; pre-populates local Gene Map. Day 1 performance = network veteran.</p>
+      <div class="layer-quote">&ldquo;Zero cold start. Your first failure is already immune.&rdquo;</div>
+    </div>
+    <div class="hgp-arrow-down">&uarr; pull</div>
+    <div class="hgp-layer" style="border-color:rgba(240,160,48,0.2)">
+      <h4 style="color:var(--amber)">Layer 2: Gene Validation &amp; Broadcast (cross-instance)</h4>
+      <p>Local Genes submitted to HGP Network periodically. Network performs: <b>a)</b> Deduplication &mdash; merge same-pattern Genes. <b>b)</b> Quality scoring &mdash; successRate &times; usage &times; proof. <b>c)</b> Broadcast &mdash; push to subscribers of that errorCode.</p>
+      <div class="layer-quote">&ldquo;Quality rises organically. Bad Genes die. Good Genes propagate. Natural selection for repair strategies.&rdquo;</div>
+    </div>
+    <div class="hgp-arrow-down">&uarr; push</div>
+    <div class="hgp-layer" style="border-color:rgba(74,222,128,0.2)">
+      <h4 style="color:var(--green)">Layer 1: Gene Generation (single instance)</h4>
+      <p>PCEC repairs a payment failure &rarr; auto-generates HGP Gene with full context &rarr; stores in local Gene Map (SQLite). Gene includes failure context + repair path + proof.</p>
+      <div class="layer-quote">&ldquo;Every repair creates knowledge. Automatically.&rdquo;</div>
+    </div>
+
+    <div class="hgp-cli"><span class="dim"># Layer 1: Local gene created after repair</span>
+<span class="prompt">$</span> <span class="hl">helix gene list</span>
+&#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+&#9474; Gene ID            &#9474; Failure       &#9474; Strat  &#9474; Succ  &#9474;
+&#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+&#9474; 0xa3f2...          &#9474; pay-insuf     &#9474; swap   &#9474; <span class="ok">14/14</span> &#9474;
+&#9474; 0xb8c1...          &#9474; session-exp   &#9474; renew  &#9474; <span class="ok">9/9</span>   &#9474;
+&#9474; 0xd4e7...          &#9474; token-paused  &#9474; switch &#9474; <span class="ok">3/3</span>   &#9474;
+&#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+
+<span class="dim"># Layer 2: Push to network</span>
+<span class="prompt">$</span> <span class="hl">helix gene push --all</span>
+Pushed 3 genes to HGP Network. Waiting for validation...
+<span class="ok">&#10003;</span> 0xa3f2 validated (txHash verified on Tempo block #4829301)
+<span class="ok">&#10003;</span> 0xb8c1 validated (txHash verified on Tempo block #4829445)
+<span class="ok">&#10003;</span> 0xd4e7 validated (txHash verified on Tempo block #4830102)
+
+<span class="dim"># Layer 3: New instance inherits</span>
+<span class="prompt">$</span> <span class="hl">helix init --chain tempo --tokens USDC,EURC</span>
+Downloading HGP genes for tempo + USDC/EURC...
+<span class="ok">&#10003;</span> Inherited 47 genes (avg success rate: 96.2%)
+<span class="ok">&#10003;</span> Gene Map pre-populated. Ready to handle failures.</div>
+
+    <!-- Part 3: Token Economics -->
+    <div class="hgp-token">
+      <h3>$HELIX &mdash; Incentivizing the Payment Immune System</h3>
+      <div class="hgp-token-badges">
+        <span class="evo-badge" style="background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.2);color:var(--purple)">VISION</span>
+        <span class="evo-badge">TOKEN CONCEPT</span>
+      </div>
+
+      <div class="hgp-flow-box">                     <span style="color:var(--purple);font-weight:700">$HELIX Token Flow</span>
+
+   Gene Author                    Gene Consumer
+   &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;                    &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+   &#9474; Agent A&#9474; <span class="hl">&mdash;push gene&mdash;&rarr;</span>    &#9474; HGP    &#9474;
+   &#9474; repairs&#9474;                    &#9474; Network&#9474; <span class="ok">&mdash;serve gene&mdash;&rarr;</span>
+   &#9474; failure&#9474; <span class="ok">&larr;earn $HELIX&mdash;</span>   &#9474;        &#9474;
+   &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;                    &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+                                       &uarr;
+                                  pay $HELIX
+                                       &#9474;
+                                  &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+                                  &#9474; Agent B&#9474;
+                                  &#9474; (new)  &#9474;
+                                  &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;</div>
+
+      <div class="hgp-util">
+        <div class="hgp-util-card"><h4>Gene Access Fee</h4><p>Consumers pay micro $HELIX to use community Genes. ~0.001 USDC per use. Top 10 most common Genes are free (bootstrap).</p></div>
+        <div class="hgp-util-card"><h4>Author Rewards</h4><p>Authors earn $HELIX every time their Gene is used. Higher-quality Genes earn more. Passive income for repair knowledge.</p></div>
+        <div class="hgp-util-card"><h4>Staking for Quality</h4><p>Authors stake $HELIX on their Genes. Works &rarr; stake + rewards. Fails &rarr; slashed. Self-policing quality mechanism.</p></div>
+        <div class="hgp-util-card"><h4>Governance</h4><p>$HELIX holders vote on: protocol upgrades, quality thresholds, fee structure, new chain integrations.</p></div>
+      </div>
+
+      <div class="hgp-flywheel">&ldquo;The <b>$HELIX token</b> isn't speculation &mdash; it's a direct claim on payment reliability.<br>Every token represents a unit of proven repair knowledge.<br>More agents &rarr; more Genes &rarr; more value &rarr; more agents. <b>Flywheel.</b>&rdquo;</div>
+    </div>
+
+    <!-- Part 4: HGP vs Generic -->
+    <h3 style="font-size:16px;font-weight:700;color:var(--text-bright);margin:28px 0 12px">HGP vs Generic Agent Protocols</h3>
+
+    <table class="hgp-vs">
+      <thead><tr><th>Dimension</th><th>Generic Agent Protocol</th><th>HGP (Helix)</th></tr></thead>
+      <tbody>
+        <tr><td>Gene source</td><td class="dim">Human-written or any agent behavior</td><td class="hl">Only from real payment failure + verified on-chain repair</td></tr>
+        <tr><td>Verification</td><td class="dim">No standard</td><td class="hl">Every Gene has a Tempo txHash</td></tr>
+        <tr><td>Failure context</td><td class="dim">Unstructured</td><td class="hl">Structured: errorCode + tokenPair + chain + sessionState</td></tr>
+        <tr><td>Applicability</td><td class="dim">Vague</td><td class="hl">Precise: balance range + chain + version + expiry</td></tr>
+        <tr><td>Quality signal</td><td class="dim">Upvotes / manual review</td><td class="hl">Automated: successRate &times; usage &times; proof status</td></tr>
+        <tr><td>Network inflection</td><td class="dim">Needs millions of agents</td><td class="hl">100 agents cover 95% of payment failure patterns</td></tr>
+        <tr><td>Cold start</td><td class="dim">Every agent starts from zero</td><td class="hl">New agents inherit full Gene Map from day 1</td></tr>
+      </tbody>
+    </table>
+
+    <div class="hgp-coda"><b>Payment failures are a bounded problem space.</b> MPP defines 7 error codes. Tempo adds ~13 more. That's ~20 failure patterns total. With 100 active Helix agents, the HGP network has seen every possible failure multiple times. The 101st agent starts with <b>perfect immunity</b>.<br><br>Generic agent protocols need millions of users to be useful. <b>HGP reaches critical mass at 100.</b></div>
+  </div>
+</section>
+
 <!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <div style="color:var(--text-dim)">
@@ -916,6 +1703,13 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
 }, { threshold: 0.15 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+// Re-observe any new .fade-in elements added after initial load
+new MutationObserver(() => {
+  document.querySelectorAll('.fade-in:not(.observed)').forEach(el => {
+    el.classList.add('observed');
+    observer.observe(el);
+  });
+}).observe(document.body, { childList: true, subtree: true });
 </script>
 </body>
 </html>
