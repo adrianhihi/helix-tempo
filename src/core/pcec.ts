@@ -532,7 +532,7 @@ export class PcecEngine {
   private geneMap: GeneMap;
   private agentId: string;
   public stats = { repairs: 0, savedRevenue: 0, immuneHits: 0 };
-  private readonly MAX_CYCLES = 3;
+  private readonly MAX_CYCLES = 50;
   private readonly MAX_COST_RATIO = 0.1;
   private cycleCount = 0;
   private totalRepairCost = 0;

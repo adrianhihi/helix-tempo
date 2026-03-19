@@ -200,10 +200,10 @@ async function main() {
   }
 
   // ── Phase 2: Re-run first 3 to show immunity ──
-  console.log(`\n\n${C.bold}${C.cyan}━━━ Phase 2: Gene Immunity (Re-running scenarios 1-3) ━━━${C.reset}`);
+  console.log(`\n\n${C.bold}${C.cyan}━━━ Phase 2: Gene Immunity (Re-running scenarios 1-3 & 13) ━━━${C.reset}`);
   console.log(`${C.dim}  Gene Map now has ${geneMap.immuneCount()} capsules — these should be INSTANT fixes${C.reset}\n`);
 
-  for (const scenario of SCENARIOS.slice(0, 3)) {
+  for (const scenario of [...SCENARIOS.slice(0, 3), SCENARIOS[SCENARIOS.length - 1]]) {
     console.log(`\n${C.bold}${C.white}▸ ${scenario.name} ${C.cyan}[IMMUNITY TEST]${C.reset}`);
     await engine.repair(scenario.error);
     await sleep(200);
