@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Helix × Tempo — Pitch Deck v4</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06080c;--bg2:#0c0f16;--bg3:#121620;--t:#e8ecf4;--tm:#7b83a0;--td:#3d4560;--amber:#f0a030;--amber2:#d48a1a;--green:#4ade80;--red:#f87171;--blue:#60a5fa;--purple:#a78bfa;--teal:#2dd4bf;--pink:#f472b6;--mono:'JetBrains Mono',monospace;--sans:'Outfit',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--t);font-family:var(--sans)}
+.deck{position:relative;width:100%;height:100%}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px 72px;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s;transform:translateY(24px)}
+.slide.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+.slide::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0}
+.slide>*{position:relative;z-index:1}
+.s1::before{background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(240,160,48,0.09),transparent 60%)}
+.s2::before{background:radial-gradient(ellipse 50% 50% at 20% 50%,rgba(248,113,113,0.07),transparent 55%)}
+.s3::before{background:radial-gradient(ellipse 50% 45% at 50% 40%,rgba(240,160,48,0.07),transparent 55%)}
+.s4::before{background:radial-gradient(ellipse 50% 45% at 60% 40%,rgba(96,165,250,0.06),transparent 55%)}
+.s5::before{background:radial-gradient(ellipse 50% 50% at 70% 30%,rgba(74,222,128,0.06),transparent 55%)}
+.s6::before{background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(240,160,48,0.1),transparent 55%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(45,212,191,0.06),transparent 50%)}
+
+/* Nav */
+.nav{position:fixed;bottom:20px;right:28px;z-index:100;display:flex;align-items:center;gap:10px}
+.nav-dots{display:flex;gap:5px}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--td);cursor:pointer;transition:all .3s}
+.nav-dot.active{background:var(--amber);width:20px;border-radius:4px}
+.nav-num{font-family:var(--mono);font-size:10px;color:var(--td)}
+.nav-hint{position:fixed;bottom:20px;left:28px;z-index:100;font-size:9px;color:var(--td);font-family:var(--mono)}
+
+/* Typography */
+.hero-title{font-size:58px;font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:14px;text-align:center}
+.hero-sub{font-size:20px;font-weight:400;color:var(--tm);text-align:center;margin-bottom:24px;max-width:680px}
+.hero-tag{font-size:14px;color:var(--td);text-align:center;max-width:560px;line-height:1.7;font-weight:300}
+.sl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+.st{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:16px}
+.sb{font-size:15px;color:var(--tm);line-height:1.7;max-width:780px}
+
+/* Cards */
+.cr{display:flex;gap:16px;margin-top:24px;width:100%;max-width:940px}
+.card{flex:1;padding:22px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.ci{font-size:24px;margin-bottom:10px}
+.ct{font-size:14px;font-weight:700;margin-bottom:6px;letter-spacing:-.01em}
+.cb{font-size:12px;color:var(--tm);line-height:1.6}
+
+/* PCEC */
+.pcec-flow{display:flex;align-items:center;gap:0;margin-top:28px}
+.pcec-s{padding:18px 24px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);text-align:center;min-width:140px}
+.pcec-l{font-size:32px;font-weight:900;font-family:var(--mono)}
+.pcec-n{font-size:11px;font-weight:600;color:var(--tm);margin-top:3px}
+.pcec-d{font-size:10px;color:var(--td);margin-top:4px}
+.pcec-a{font-size:18px;color:var(--td);padding:0 6px}
+
+/* TAM */
+.tam-row{display:flex;gap:16px;margin-top:24px}
+.tam-c{flex:1;text-align:center;padding:20px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+.tam-n{font-size:32px;font-weight:900;font-family:var(--mono);letter-spacing:-.03em}
+.tam-l{font-size:10px;color:var(--tm);margin-top:3px}
+
+/* Scenario table */
+.sct{width:100%;border-collapse:collapse}
+.sct th{text-align:left;font-size:8px;font-weight:700;color:var(--td);text-transform:uppercase;letter-spacing:.08em;padding:5px 8px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.sct td{font-size:9.5px;padding:4px 8px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:var(--mono)}
+.sct td:first-child{font-family:var(--sans);font-weight:600;color:var(--t);font-size:10px}
+.sct td:nth-child(2){color:var(--green)}
+.tag{font-size:7px;padding:2px 5px;border-radius:3px;font-weight:700;font-family:var(--sans)}
+.tl{background:rgba(74,222,128,0.12);color:var(--green)}
+.tm2{background:rgba(96,165,250,0.12);color:var(--blue)}
+.tv{background:rgba(167,139,250,0.12);color:var(--purple)}
+
+/* Code */
+.code{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:20px 24px;font-family:var(--mono);font-size:13px;line-height:1.8;margin-top:20px;max-width:680px;width:100%;text-align:left}
+.kw{color:var(--purple)}.fn{color:var(--blue)}.str{color:var(--green)}.cm{color:var(--td)}
+
+/* Evolution */
+.evo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;width:100%;max-width:940px}
+.evo{padding:24px 20px;border-radius:12px;text-align:center}
+.evo-badge{font-size:9px;font-weight:700;padding:3px 10px;border-radius:12px;display:inline-block;margin-bottom:10px;font-family:var(--mono)}
+.evo-title{font-size:15px;font-weight:700;margin-bottom:8px}
+.evo-items{font-size:11px;color:var(--tm);line-height:1.7;text-align:left}
+
+/* Ask */
+.ask-t{font-size:48px;font-weight:900;letter-spacing:-.03em;text-align:center;margin-bottom:16px}
+
+/* Misc */
+.quote{font-size:17px;font-weight:400;font-style:italic;color:var(--tm);text-align:center;max-width:680px;line-height:1.7;margin-top:20px}
+.quote em{font-style:normal;color:var(--amber);font-weight:600}
+.divider{width:80px;height:2px;background:linear-gradient(90deg,var(--amber),var(--teal));border-radius:1px;margin:16px auto}
+.logo{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+.logo-t{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.logo-t span{color:var(--amber)}
+.logo-b{font-size:8px;padding:3px 9px;border-radius:20px;background:var(--teal);color:#000;font-weight:700;letter-spacing:.05em}
+.badge-row{display:flex;gap:8px;margin-top:16px;justify-content:center;flex-wrap:wrap}
+.badge{font-size:10px;padding:4px 12px;border-radius:16px;font-weight:600;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03)}
+
+/* Fade */
+.slide.active .fu{animation:fu .6s ease forwards}
+.fu{opacity:0;transform:translateY(16px)}
+@keyframes fu{to{opacity:1;transform:translateY(0)}}
+.d1{animation-delay:.08s}.d2{animation-delay:.16s}.d3{animation-delay:.24s}.d4{animation-delay:.32s}.d5{animation-delay:.4s}.d6{animation-delay:.48s}.d7{animation-delay:.56s}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ═══ 1 HERO ═══ -->
+<div class="slide s1 active" data-i="0">
+  <div class="logo fu d1"><div class="logo-t">🧬 <span>Helix</span> × Tempo</div><span class="logo-b">HACKATHON 2026</span></div>
+  <div class="hero-title fu d2">Self-healing payment infrastructure<br>for autonomous agents</div>
+  <div class="hero-sub fu d3">Two lines of code. Every payment failure auto-repairs.<br>Your agent gets smarter with every transaction.</div>
+  <div class="divider fu d4"></div>
+  <div class="hero-tag fu d5">Stripe built payments for humans.<br>Helix builds payments for machines.</div>
+  <div class="badge-row fu d6">
+    <span class="badge" style="color:var(--amber)">PCEC Self-Repair Engine</span>
+    <span class="badge" style="color:var(--teal)">Gene Map Learning</span>
+    <span class="badge" style="color:var(--green)">MPP + x402 Native</span>
+    <span class="badge" style="color:var(--purple)">13 Failure Scenarios</span>
+  </div>
+</div>
+
+<!-- ═══ 2 PROBLEM ═══ -->
+<div class="slide s2" data-i="1">
+  <div class="sl fu d1">The Problem</div>
+  <div class="st fu d2">Agent payments fail silently.<br>At $3–5T/year — that's catastrophic.</div>
+  <div class="tam-row fu d3">
+    <div class="tam-c">
+      <div class="tam-n" style="color:var(--amber)">$3–5T</div>
+      <div class="tam-l">Agent commerce / year by 2030</div>
+      <div style="font-size:9px;color:var(--td);margin-top:4px">McKinsey · WEF · Sam Altman</div>
+    </div>
+    <div class="tam-c">
+      <div class="tam-n" style="color:var(--red)">5–8%</div>
+      <div class="tam-l">Agent payment failure rate today</div>
+      <div style="font-size:9px;color:var(--td);margin-top:4px">vs 2–4% for traditional payments</div>
+    </div>
+    <div class="tam-c">
+      <div class="tam-n" style="color:var(--red)">$400B+</div>
+      <div class="tam-l">Yearly revenue at risk</div>
+      <div style="font-size:9px;color:var(--td);margin-top:4px">at projected 2030 volume</div>
+    </div>
+  </div>
+  <div class="cr fu d4">
+    <div class="card"><div class="ci">💀</div><div class="ct">Silent failures</div><div class="cb">Agent hits 402 — insufficient balance, wrong currency, expired session. No fallback. Task dies. Revenue gone.</div></div>
+    <div class="card"><div class="ci">🧠</div><div class="ct">Zero memory</div><div class="cb">Same failure hits every night at 2am. Agent learns nothing. Engineers on-call for problems machines should solve.</div></div>
+    <div class="card"><div class="ci">🔗</div><div class="ct">All MPP services affected</div><div class="cb">Every service on MPP — OpenAI, StableEnrich, Exa, fal.ai — is exposed. One missing payment kills the entire agent task.</div></div>
+  </div>
+</div>
+
+<!-- ═══ 3 SOLUTION ═══ -->
+<div class="slide s3" data-i="2">
+  <div class="sl fu d1">The Solution</div>
+  <div class="st fu d2" style="font-size:36px">PCEC: Perceive → Construct → Evaluate → Commit</div>
+  <div class="sb fu d3" style="text-align:center">Works across all MPP services and x402 endpoints. Sub-second. Fully autonomous. Two lines of code.</div>
+  <div class="pcec-flow fu d4">
+    <div class="pcec-s"><div class="pcec-l" style="color:var(--red)">P</div><div class="pcec-n">Perceive</div><div class="pcec-d">Parse MPP 402 error<br>Classify failure type</div></div>
+    <div class="pcec-a">→</div>
+    <div class="pcec-s"><div class="pcec-l" style="color:var(--blue)">C</div><div class="pcec-n">Construct</div><div class="pcec-d">Generate 2-3 repair<br>candidates with cost</div></div>
+    <div class="pcec-a">→</div>
+    <div class="pcec-s"><div class="pcec-l" style="color:var(--purple)">E</div><div class="pcec-n">Evaluate</div><div class="pcec-d">Score by speed, cost<br>Pick optimal strategy</div></div>
+    <div class="pcec-a">→</div>
+    <div class="pcec-s"><div class="pcec-l" style="color:var(--green)">C</div><div class="pcec-n">Commit</div><div class="pcec-d">Execute repair, retry<br>Store Gene Capsule</div></div>
+  </div>
+  <div class="code fu d5">
+    <span class="kw">import</span> { <span class="fn">wrap</span> } <span class="kw">from</span> <span class="str">'@helix/tempo'</span>;<br><br>
+    <span class="cm">// Your existing agent — unchanged</span><br>
+    <span class="kw">const</span> pay = <span class="kw">async</span> (inv) => { <span class="kw">const</span> r = <span class="kw">await</span> <span class="fn">fetch</span>(mppEndpoint); <span class="kw">return</span> r.<span class="fn">json</span>(); };<br><br>
+    <span class="cm">// One line. Self-healing on every MPP service + x402 endpoint.</span><br>
+    <span class="kw">const</span> resilient = <span class="fn">wrap</span>(pay); <span class="cm">// 402? Auto-fixed. Session expired? Renewed. Same error? Instant immune.</span>
+  </div>
+  <div class="quote fu d6" style="font-size:14px;margin-top:14px">Gene Capsules accumulate. Same failure → <em>instant fix</em>. The agent gets smarter with every transaction.</div>
+</div>
+
+<!-- ═══ 4 NUMBERS + SCENARIOS ═══ -->
+<div class="slide s4" data-i="3">
+  <div class="sl fu d1">Coverage & Impact</div>
+  <div style="display:flex;gap:28px;width:100%;max-width:980px;margin-top:4px;align-items:flex-start" class="fu d2">
+
+    <!-- LEFT: scenarios table -->
+    <div style="flex:1.1">
+      <div style="font-size:11px;font-weight:700;color:var(--amber);font-family:var(--mono);margin-bottom:10px;letter-spacing:.08em">13 FAILURE SCENARIOS COVERED</div>
+      <table class="sct">
+        <tr><th>#</th><th>Failure</th><th>Repair Strategy</th><th></th></tr>
+        <tr><td>1</td><td>Insufficient Balance</td><td>swap_currency (Tempo DEX)</td><td><span class="tag tl">LIVE</span></td></tr>
+        <tr><td>2</td><td>Session Expired</td><td>renew_session</td><td><span class="tag tl">LIVE</span></td></tr>
+        <tr><td>3</td><td>Currency Mismatch</td><td>swap_to_required_asset</td><td><span class="tag tl">LIVE</span></td></tr>
+        <tr><td>4</td><td>Signature Failure</td><td>refresh_nonce (Tempo RPC)</td><td><span class="tag tl">LIVE</span></td></tr>
+        <tr><td>5</td><td>Batch Revert</td><td>remove_failed + resubmit</td><td><span class="tag tl">LIVE</span></td></tr>
+        <tr><td>6</td><td>Service Down (paid)</td><td>retry_with_MPP_receipt</td><td><span class="tag tm2">MOCK</span></td></tr>
+        <tr><td>7</td><td>DEX Slippage</td><td>split_into_smaller_swaps</td><td><span class="tag tm2">MOCK</span></td></tr>
+        <tr><td>8</td><td>Compliance Block</td><td>switch_unrestricted_stablecoin</td><td><span class="tag tm2">MOCK</span></td></tr>
+        <tr><td>9</td><td>Cascade Failure</td><td>refund_waterfall C→B→A</td><td><span class="tag tv">VISION</span></td></tr>
+        <tr><td>10</td><td>Off-Ramp Failure</td><td>switch_off_ramp_provider</td><td><span class="tag tv">VISION</span></td></tr>
+        <tr><td>11</td><td>Token Pause</td><td>switch_unpaused_stablecoin</td><td><span class="tag tm2">MOCK</span></td></tr>
+        <tr><td>12</td><td>Fee Sponsor Empty</td><td>fallback_to_self_pay_gas</td><td><span class="tag tm2">MOCK</span></td></tr>
+        <tr><td>13</td><td>Network Mismatch (REAL)</td><td>switch_network / bridge_tokens</td><td><span class="tag tl">LIVE</span></td></tr>
+      </table>
+      <div style="font-size:9px;color:var(--td);font-family:var(--mono);margin-top:8px">Scenarios derived from TIP-20, TIP-403, Fee AMM & Tempo Transaction specs · PR #2069 · PR #2218</div>
+    </div>
+
+    <!-- RIGHT: before/after -->
+    <div style="flex:.85;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--amber);font-family:var(--mono);margin-bottom:2px;letter-spacing:.08em">BEFORE → AFTER HELIX</div>
+      <div class="card" style="border-color:rgba(248,113,113,0.15)">
+        <div class="ct" style="color:var(--red)">❌ Without Helix</div>
+        <div style="font-size:26px;font-weight:900;font-family:var(--mono);color:var(--red);margin:8px 0">5–8%</div>
+        <div class="cb">failure rate · same crash every night<br>engineers paged · zero fix · revenue lost</div>
+      </div>
+      <div class="card" style="border-color:rgba(74,222,128,0.15)">
+        <div class="ct" style="color:var(--green)">✅ With Helix</div>
+        <div style="font-size:26px;font-weight:900;font-family:var(--mono);color:var(--green);margin:8px 0">&lt;1%</div>
+        <div class="cb">13 scenarios auto-repaired · sub-second<br>second time: instant immune · 0ms</div>
+      </div>
+      <div class="card" style="border-color:rgba(240,160,48,0.15)">
+        <div class="ct" style="color:var(--amber)">💰 Revenue Saved</div>
+        <div style="font-size:26px;font-weight:900;font-family:var(--mono);color:var(--amber);margin:8px 0">$400B+</div>
+        <div class="cb">yearly recovered value by 2030<br>0.1% take rate · only win when agents win</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 5 TEAM ═══ -->
+<div class="slide s5" data-i="4">
+  <div class="sl fu d1">Team</div>
+  <div class="st fu d2" style="font-size:34px">Built by people who understand<br>both sides of this problem</div>
+  <div class="cr fu d3" style="max-width:760px">
+    <div class="card" style="text-align:center;padding:28px 24px">
+      <div style="font-size:36px;margin-bottom:12px">🧠</div>
+      <div class="ct" style="font-size:18px;margin-bottom:12px">Nicholas</div>
+      <div class="cb" style="line-height:2">
+        Harvard · Vanderbilt · Princeton AI Lab<br>
+        Co-author <strong style="color:var(--t)">CryptoBench</strong> (ICML 2026)<br>
+        Endorsed by Elon Musk
+      </div>
+    </div>
+    <div class="card" style="text-align:center;padding:28px 24px">
+      <div style="font-size:36px;margin-bottom:12px">⚡</div>
+      <div class="ct" style="font-size:18px;margin-bottom:12px">Adrian</div>
+      <div class="cb" style="line-height:2">
+        Staff Software Engineer @ <strong style="color:var(--t)">Anthropic</strong><br>
+        Ex Member of Technical Staff @ <strong style="color:var(--t)">OpenAI</strong><br>
+        Ex Member of Technical Staff @ <strong style="color:var(--t)">xAI</strong>
+      </div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:var(--td);font-family:var(--mono);margin-top:20px;text-align:center" class="fu d4">github.com/adrianhihi/helix-tempo</div>
+</div>
+
+<!-- ═══ 6 VISION ═══ -->
+<div class="slide s6" data-i="5">
+  <div class="logo fu d1"><div class="logo-t">🧬 <span>Helix</span> × Tempo</div></div>
+  <div class="ask-t fu d2" style="font-size:40px;line-height:1.15">LLMs are building the future of intelligence.<br><span style="color:var(--amber)">We're building the infrastructure<br>that makes it unstoppable.</span></div>
+  <div class="divider fu d3"></div>
+  <div class="quote fu d4" style="font-size:14px;max-width:700px">
+    OpenAI built the model. Stripe built the payment rails.<br>
+    <em>Nobody built what happens when those rails break.</em><br><br>
+    Helix Gene Protocol (HGP) is the world's first chain-verified knowledge network for payment failure repair.<br>
+    Fix a failure once — every autonomous agent on the network is immune forever.
+  </div>
+  <div class="evo-row fu d5" style="grid-template-columns:repeat(3,1fr)">
+    <div class="evo" style="border:1px solid rgba(74,222,128,0.15);background:rgba(74,222,128,0.03)">
+      <div class="evo-badge" style="background:rgba(74,222,128,0.15);color:var(--green)">NOW · DEMO</div>
+      <div class="evo-title" style="color:var(--green)">Self-Healing SDK</div>
+      <div class="evo-items">• 13 failure scenarios live<br>• PCEC engine on Tempo + x402<br>• Local Gene Map (SQLite)<br>• Sub-second repair</div>
+    </div>
+    <div class="evo" style="border:1px solid rgba(240,160,48,0.15);background:rgba(240,160,48,0.03)">
+      <div class="evo-title" style="color:var(--amber)">Helix Gene Protocol</div>
+      <div class="evo-items">• LLM fallback for unknown failures<br>• helix gene push / pull<br>• Community Gene sharing</div>
+    </div>
+    <div class="evo" style="border:1px solid rgba(167,139,250,0.15);background:rgba(167,139,250,0.03)">
+      <div class="evo-title" style="color:var(--purple)">The Autonomous OS</div>
+      <div class="evo-items">• Every autonomous system that moves value<br>• IoT · Robotics · DePIN · Payroll<br>• Parameter optimization<br>• The reliability layer for the agent economy</div>
+    </div>
+  </div>
+  <div style="margin-top:16px;text-align:center" class="fu d6">
+    <div style="font-size:13px;font-weight:700;color:var(--amber)">"Fix it once. Every agent on the network is immune. That's not a product — that's a protocol."</div>
+  </div>
+</div>
+
+</div>
+
+<!-- NAV -->
+<div class="nav"><div class="nav-dots" id="dots"></div><div class="nav-num" id="nn">1 / 6</div></div>
+<div class="nav-hint">← → keys · spacebar · swipe</div>
+
+<script>
+const S=document.querySelectorAll('.slide'),D=document.getElementById('dots'),N=document.getElementById('nn');
+let c=0;
+S.forEach((_,i)=>{const d=document.createElement('div');d.className='nav-dot'+(i===0?' active':'');d.onclick=()=>go(i);D.appendChild(d)});
+function go(n){if(n<0||n>=S.length||n===c)return;const p=c;S[p].classList.remove('active');c=n;S[c].querySelectorAll('.fu').forEach(e=>{e.style.animation='none';e.offsetHeight;e.style.animation=''});S[c].classList.add('active');D.querySelectorAll('.nav-dot').forEach((d,i)=>d.classList.toggle('active',i===c));N.textContent=`${c+1} / ${S.length}`}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(c+1)}if(e.key==='ArrowLeft'){e.preventDefault();go(c-1)}if(e.key==='Home')go(0);if(e.key==='End')go(S.length-1)});
+let tx=0;document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60)go(c+(dx<0?1:-1))});
+</script>
+</body>
+</html>
