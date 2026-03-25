@@ -1,4 +1,4 @@
-# helix-tempo
+# helix-tempo (Migrated into https://github.com/adrianhihi/helix)
 
 Self-healing payment infrastructure SDK for AI agents on the Tempo blockchain.
 
